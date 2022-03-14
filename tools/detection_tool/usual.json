@@ -1,0 +1,538 @@
+{
+    "2007_000027.jpg": [
+        {
+            "category": "person",
+            "bbox": [
+                174,
+                101,
+                175,
+                250
+            ]
+        }
+    ],
+    "2007_000032.jpg": [
+        {
+            "category": "aeroplane",
+            "bbox": [
+                104,
+                78,
+                271,
+                105
+            ]
+        },
+        {
+            "category": "aeroplane",
+            "bbox": [
+                133,
+                88,
+                64,
+                35
+            ]
+        },
+        {
+            "category": "person",
+            "bbox": [
+                195,
+                180,
+                18,
+                49
+            ]
+        },
+        {
+            "category": "person",
+            "bbox": [
+                26,
+                189,
+                18,
+                49
+            ]
+        }
+    ],
+    "2007_000033.jpg": [
+        {
+            "category": "aeroplane",
+            "bbox": [
+                9,
+                107,
+                490,
+                156
+            ]
+        },
+        {
+            "category": "aeroplane",
+            "bbox": [
+                421,
+                200,
+                61,
+                26
+            ]
+        },
+        {
+            "category": "aeroplane",
+            "bbox": [
+                325,
+                188,
+                86,
+                35
+            ]
+        }
+    ],
+    "2007_000039.jpg": [
+        {
+            "category": "tvmonitor",
+            "bbox": [
+                156,
+                89,
+                188,
+                190
+            ]
+        }
+    ],
+    "2007_000042.jpg": [
+        {
+            "category": "train",
+            "bbox": [
+                263,
+                32,
+                237,
+                263
+            ]
+        },
+        {
+            "category": "train",
+            "bbox": [
+                1,
+                36,
+                234,
+                263
+            ]
+        }
+    ],
+    "2007_000061.jpg": [
+        {
+            "category": "boat",
+            "bbox": [
+                274,
+                11,
+                163,
+                268
+            ]
+        },
+        {
+            "category": "boat",
+            "bbox": [
+                184,
+                214,
+                97,
+                38
+            ]
+        }
+    ],
+    "2007_000063.jpg": [
+        {
+            "category": "dog",
+            "bbox": [
+                123,
+                115,
+                256,
+                160
+            ]
+        },
+        {
+            "category": "chair",
+            "bbox": [
+                75,
+                1,
+                353,
+                374
+            ]
+        }
+    ],
+    "2007_000068.jpg": [
+        {
+            "category": "bird",
+            "bbox": [
+                27,
+                45,
+                239,
+                330
+            ]
+        }
+    ],
+    "2007_000121.jpg": [
+        {
+            "category": "tvmonitor",
+            "bbox": [
+                251,
+                28,
+                224,
+                239
+            ]
+        },
+        {
+            "category": "tvmonitor",
+            "bbox": [
+                22,
+                28,
+                229,
+                245
+            ]
+        }
+    ],
+    "2007_000123.jpg": [
+        {
+            "category": "train",
+            "bbox": [
+                1,
+                26,
+                357,
+                314
+            ]
+        }
+    ],
+    "2007_000129.jpg": [
+        {
+            "category": "bicycle",
+            "bbox": [
+                70,
+                202,
+                185,
+                298
+            ]
+        },
+        {
+            "category": "bicycle",
+            "bbox": [
+                251,
+                242,
+                83,
+                258
+            ]
+        },
+        {
+            "category": "bicycle",
+            "bbox": [
+                1,
+                144,
+                66,
+                292
+            ]
+        },
+        {
+            "category": "person",
+            "bbox": [
+                1,
+                1,
+                65,
+                362
+            ]
+        },
+        {
+            "category": "person",
+            "bbox": [
+                74,
+                1,
+                198,
+                461
+            ]
+        },
+        {
+            "category": "person",
+            "bbox": [
+                252,
+                19,
+                82,
+                468
+            ]
+        }
+    ],
+    "2007_000170.jpg": [
+        {
+            "category": "bottle",
+            "bbox": [
+                87,
+                100,
+                22,
+                65
+            ]
+        },
+        {
+            "category": "bottle",
+            "bbox": [
+                41,
+                114,
+                32,
+                67
+            ]
+        },
+        {
+            "category": "bottle",
+            "bbox": [
+                324,
+                148,
+                28,
+                58
+            ]
+        },
+        {
+            "category": "bottle",
+            "bbox": [
+                426,
+                157,
+                17,
+                38
+            ]
+        },
+        {
+            "category": "person",
+            "bbox": [
+                3,
+                91,
+                40,
+                115
+            ]
+        },
+        {
+            "category": "person",
+            "bbox": [
+                4,
+                28,
+                457,
+                344
+            ]
+        }
+    ],
+    "2007_000175.jpg": [
+        {
+            "category": "sheep",
+            "bbox": [
+                25,
+                34,
+                394,
+                237
+            ]
+        }
+    ],
+    "2007_000187.jpg": [
+        {
+            "category": "tvmonitor",
+            "bbox": [
+                1,
+                95,
+                239,
+                241
+            ]
+        }
+    ],
+    "2007_000241.jpg": [
+        {
+            "category": "boat",
+            "bbox": [
+                356,
+                183,
+                144,
+                97
+            ]
+        },
+        {
+            "category": "boat",
+            "bbox": [
+                60,
+                109,
+                82,
+                104
+            ]
+        },
+        {
+            "category": "boat",
+            "bbox": [
+                246,
+                134,
+                102,
+                83
+            ]
+        }
+    ],
+    "2007_000243.jpg": [
+        {
+            "category": "aeroplane",
+            "bbox": [
+                181,
+                127,
+                93,
+                66
+            ]
+        }
+    ],
+    "2007_000250.jpg": [
+        {
+            "category": "diningtable",
+            "bbox": [
+                1,
+                170,
+                473,
+                205
+            ]
+        },
+        {
+            "category": "bottle",
+            "bbox": [
+                97,
+                124,
+                53,
+                173
+            ]
+        }
+    ],
+    "2007_000256.jpg": [
+        {
+            "category": "aeroplane",
+            "bbox": [
+                8,
+                96,
+                483,
+                136
+            ]
+        }
+    ],
+    "2007_000272.jpg": [
+        {
+            "category": "person",
+            "bbox": [
+                25,
+                71,
+                279,
+                429
+            ]
+        }
+    ],
+    "2007_000323.jpg": [
+        {
+            "category": "person",
+            "bbox": [
+                277,
+                3,
+                223,
+                372
+            ]
+        },
+        {
+            "category": "person",
+            "bbox": [
+                12,
+                3,
+                293,
+                372
+            ]
+        }
+    ],
+    "2007_000332.jpg": [
+        {
+            "category": "horse",
+            "bbox": [
+                54,
+                50,
+                231,
+                212
+            ]
+        }
+    ],
+    "2007_000333.jpg": [
+        {
+            "category": "train",
+            "bbox": [
+                1,
+                39,
+                366,
+                231
+            ]
+        }
+    ],
+    "2007_000346.jpg": [
+        {
+            "category": "bottle",
+            "bbox": [
+                124,
+                107,
+                106,
+                236
+            ]
+        },
+        {
+            "category": "person",
+            "bbox": [
+                137,
+                78,
+                360,
+                297
+            ]
+        },
+        {
+            "category": "person",
+            "bbox": [
+                89,
+                202,
+                40,
+                45
+            ]
+        },
+        {
+            "category": "person",
+            "bbox": [
+                72,
+                209,
+                39,
+                50
+            ]
+        }
+    ],
+    "2007_000363.jpg": [
+        {
+            "category": "bird",
+            "bbox": [
+                59,
+                15,
+                161,
+                224
+            ]
+        },
+        {
+            "category": "bird",
+            "bbox": [
+                161,
+                122,
+                339,
+                211
+            ]
+        }
+    ],
+    "2007_000364.jpg": [
+        {
+            "category": "motorbike",
+            "bbox": [
+                54,
+                25,
+                400,
+                290
+            ]
+        },
+        {
+            "category": "motorbike",
+            "bbox": [
+                318,
+                37,
+                171,
+                124
+            ]
+        },
+        {
+            "category": "person",
+            "bbox": [
+                369,
+                1,
+                89,
+                129
+            ]
+        }
+    ]
+}
