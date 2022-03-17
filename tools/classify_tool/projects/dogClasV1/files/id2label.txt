@@ -1,0 +1,10 @@
+bige 0
+bomei 1
+hashiqi 2
+jinmao 3
+keji 4
+labuladuo 5
+muyang 6
+samoye 7
+shapi 8
+xuenarui 9
