@@ -35,7 +35,7 @@ def main(config):
         dataloader=InferDataLoader(img_list, config.batch_size)
         model_ft, input_size = initialize_model(config.model_name, config.num_classes, feature_learning, use_pretrained=False)
         # print(config.projectPath)
-        pretrained_model=osp.join(config.projectPath, 'output', 'best_model.pkl')
+        pretrained_model=osp.join(config.projectPath, 'output',config.model_name, 'best_model.pkl')
         model_ft.load_state_dict(torch.load(pretrained_model))
         model_ft.to(device)
         label2id=json.loads(open(osp.join(config.projectPath,'files','label2id.json')).read())

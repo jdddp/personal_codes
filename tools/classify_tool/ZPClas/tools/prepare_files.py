@@ -12,10 +12,12 @@ def makeDir(dirpath):
     if not osp.exists(dirpath):
         os.makedirs(dirpath)
 
-def makeMapFileRandom(dirpath, filePath):
+def makeMapFileRandom(dirpath, projectPath):
     '''dirpath: path of dataset
     filePath: path of [id<->label]
     '''
+    filePath=osp.join(projectPath)
+    makeDir(filePath)
     id2label={}
     label2id={}
     for i,label in enumerate(os.listdir(dirpath)):
@@ -34,10 +36,12 @@ def makeMapFileRandom(dirpath, filePath):
     with open(osp.join(filePath, 'label2id.json'), 'w')as f:
         f.write(json.dumps(label2id))
 
-def makeMapFile(dirpath, filePath):
+def makeMapFile(dirpath, projectPath):
     '''dirpath: path of dataset
     filePath: path of [id<->label]
     '''
+    filePath=osp.join(projectPath)
+    makeDir(filePath)
     label2id={}
     id2label={}
     for label in os.listdir(dirpath):
@@ -55,10 +59,13 @@ def makeMapFile(dirpath, filePath):
     with open(osp.join(filePath, 'label2id.json'), 'w')as f:
         f.write(json.dumps(label2id))
 
-def makeTrainFiles(dirpath, filePath,ratio=0.9):
+def makeTrainFiles(dirpath, projectPath,ratio=0.9):
     '''dirpath: path of dataset
     filePath: path of [id<->label]
     '''
+    filePath=osp.join(projectPath)
+    makeDir(filePath)
+    
     ratio=float(ratio)
     label2id=json.loads(open(osp.join(filePath, 'label2id.json')).read())
     train_list=[]
@@ -89,7 +96,17 @@ def makeTrainFiles(dirpath, filePath,ratio=0.9):
     f_val.write('\n'.join(val_list))
     print('test.txt is done! len is {}'.format(len(val_list)))
 
-    
+def makeEvalData(dirpath, projectPath):
+    goalDir=osp.join(projectPath, 'testData')
+    filePath=osp.join(projectPath, 'files')
+    makeDir(filePath)
+    makeDir(goalDir)
+
+    label2id=json.loads(open(osp.join(filePath, 'label2id.json')).read())
+    with open(osp.join(filePath, 'test.txt'))as f:
+        for line in f:
+            imgPath, idd = line.strip().split('\t')
+            shutil.copy(osp.join(dirpath, imgPath), osp.join(goalDir, idd+'_'+osp.basename(imgPath)))
 
 
 if __name__=="__main__":

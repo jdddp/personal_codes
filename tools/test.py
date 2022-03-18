@@ -24,6 +24,7 @@ def iou(list1,list2):
     else:
         return float((x2-x1)*(y2-y1))/(w1*h1+w2*h2)
 
+print(osp.dirname('E:\vsCodes\personal_codes\tools\classify_tool\projects\dogClasV1\files'))
 # ##################################################
 # # class Logger(object):
 # #     def __init__(self, filename='default.log', add_flag=True, stream=sys.stdout):

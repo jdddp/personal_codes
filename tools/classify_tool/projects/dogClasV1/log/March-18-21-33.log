@@ -1,0 +1,63 @@
+-*-*-*-*-*-*-*-*Begin To Train*-*-*-*-*-*-*-*-
+Step=19/1104, Train Time=0.2510, Train Acc=0.5312
+Step=39/1104, Train Time=0.2591, Train Acc=0.7969
+Step=59/1104, Train Time=0.2447, Train Acc=0.8125
+Step=79/1104, Train Time=0.2469, Train Acc=0.8359
+Step=99/1104, Train Time=0.2543, Train Acc=0.8594
+Step=119/1104, Train Time=0.2572, Train Acc=0.9062
+Step=139/1104, Train Time=0.2505, Train Acc=0.8828
+Step=159/1104, Train Time=0.2523, Train Acc=0.8516
+Step=179/1104, Train Time=0.2539, Train Acc=0.9062
+Step=199/1104, Train Time=0.2431, Train Acc=0.9062
+Step=219/1104, Train Time=0.2457, Train Acc=0.9297
+Step=239/1104, Train Time=0.2437, Train Acc=0.8828
+Step=259/1104, Train Time=0.2430, Train Acc=0.8984
+Step=279/1104, Train Time=0.2469, Train Acc=0.9297
+Step=299/1104, Train Time=0.2501, Train Acc=0.9062
+Step=319/1104, Train Time=0.2459, Train Acc=0.9062
+Step=339/1104, Train Time=0.2459, Train Acc=0.8984
+Step=359/1104, Train Time=0.2513, Train Acc=0.9219
+Step=379/1104, Train Time=0.2433, Train Acc=0.8672
+Step=399/1104, Train Time=0.2464, Train Acc=0.9766
+Step=419/1104, Train Time=0.2454, Train Acc=0.8906
+Step=439/1104, Train Time=0.2458, Train Acc=0.8906
+Step=459/1104, Train Time=0.2473, Train Acc=0.9531
+Step=479/1104, Train Time=0.2455, Train Acc=0.9297
+Step=499/1104, Train Time=0.2468, Train Acc=0.9375
+Step=519/1104, Train Time=0.2452, Train Acc=0.9531
+Step=539/1104, Train Time=0.2469, Train Acc=0.9375
+Step=559/1104, Train Time=0.2491, Train Acc=0.9219
+Step=579/1104, Train Time=0.2430, Train Acc=0.9453
+Step=599/1104, Train Time=0.2773, Train Acc=0.9688
+Step=619/1104, Train Time=0.2455, Train Acc=0.9297
+Step=639/1104, Train Time=0.2714, Train Acc=0.9453
+Step=659/1104, Train Time=0.2722, Train Acc=0.9297
+Step=679/1104, Train Time=0.2399, Train Acc=0.9453
+Step=699/1104, Train Time=0.2400, Train Acc=0.8984
+Step=719/1104, Train Time=0.2418, Train Acc=0.9609
+Step=739/1104, Train Time=0.2481, Train Acc=0.9219
+Step=759/1104, Train Time=0.2467, Train Acc=0.9297
+Step=779/1104, Train Time=0.2618, Train Acc=0.9453
+Step=799/1104, Train Time=0.2449, Train Acc=0.9766
+Step=819/1104, Train Time=0.2518, Train Acc=0.9297
+Step=839/1104, Train Time=0.2421, Train Acc=0.9531
+Step=859/1104, Train Time=0.2449, Train Acc=0.9062
+Step=879/1104, Train Time=0.2513, Train Acc=0.9609
+Step=899/1104, Train Time=0.2474, Train Acc=0.9453
+Step=919/1104, Train Time=0.2424, Train Acc=0.9375
+Step=939/1104, Train Time=0.2402, Train Acc=0.9453
+Step=959/1104, Train Time=0.2430, Train Acc=0.9922
+Step=979/1104, Train Time=0.2438, Train Acc=0.9609
+Step=999/1104, Train Time=0.2450, Train Acc=0.9531
+Step=1019/1104, Train Time=0.2410, Train Acc=0.9453
+Step=1039/1104, Train Time=0.2437, Train Acc=0.9531
+Step=1059/1104, Train Time=0.2402, Train Acc=0.9375
+Step=1079/1104, Train Time=0.2410, Train Acc=0.9375
+Step=1099/1104, Train Time=0.2404, Train Acc=0.9688
+Time=18:21:46, Epoch=0, Train Time=742.0404243469238, Loss=0.3339, Train Acc:0.9054, Best Train Acc=0.9054
+-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+Epoch=0, Eval_Acc=0.9964, Best Eval Acc=0.9964
+-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+Step=19/1104, Train Time=0.2408, Train Acc=0.9766

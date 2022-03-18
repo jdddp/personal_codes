@@ -28,7 +28,7 @@ def design_result(results,label_list,imgnames,ans_nums):
     for i, output in enumerate(results):
         imgPath=imgnames[i]
         output_n,label_list_n=sort_parallel(output, label_list)
-        ans.append({'score_list':output_n[:ans_nums-1], 'label_list':label_list_n[:ans_nums-1], 'imgpath':imgPath})
+        ans.append({'score_list':output_n[:ans_nums], 'label_list':label_list_n[:ans_nums], 'imgpath':imgPath})
     return ans
 
 
@@ -40,17 +40,16 @@ def infer(dataloader, model,label_list,ans_nums,projectPath):
     with torch.no_grad():
         model.eval()
         for step, (inputs,imgnames) in enumerate(dataloader):
-            if (step+1)%20==0:
-                print(step)
             inputs = inputs.to(device)
             # labels = labels.to(device)
 
             outputs = model(inputs)
-            outputs=nn.Softmax(dim=0)(outputs)
+            outputs=nn.Softmax(dim=1)(outputs)
             outputs = outputs.cpu().numpy().tolist()
 
             ans=design_result(outputs, label_list, imgnames, ans_nums)
             log.print(ans)
+            
             # time.sleep(2)
 
 
