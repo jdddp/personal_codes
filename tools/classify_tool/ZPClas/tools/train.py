@@ -15,7 +15,7 @@ def makeDir(dirpath):
         os.makedirs(dirpath)
 
 def train_model(datasetPath, projectPath, batch_size, dataloaderDct, datasetSizesDct,model, \
-                crtiation, optimizer, schedular, \
+                crtiation, optimizer, schedular, model_name, \
                 num_epochs=100, save_interval=8, eval_interval=5, \
                 ifEval=True):
     
@@ -75,7 +75,8 @@ def train_model(datasetPath, projectPath, batch_size, dataloaderDct, datasetSize
         
 
         if (epoch+1)%save_interval==0:
-            torch.save(model.state_dict(), osp.join(projectPath, 'output','epoch_{}.pkl'.format(epoch)))
+            makeDir(osp.join(projectPath, 'output',model_name))
+            torch.save(model.state_dict(), osp.join(projectPath, 'output',model_name,'epoch_{}.pkl'.format(epoch)))
 
         if (epoch+1)%eval_interval==0 and ifEval:
             with torch.no_grad():
@@ -102,8 +103,8 @@ def train_model(datasetPath, projectPath, batch_size, dataloaderDct, datasetSize
                 # best_val_acc=max(best_val_acc, avg_valid_acc)
                 if avg_valid_acc>best_val_acc:
                     best_val_acc=avg_valid_acc
-                    makeDir(osp.join(projectPath, 'output'))
-                    torch.save(model.state_dict(), osp.join(projectPath, 'output', 'best_model.pkl'))
+                    makeDir(osp.join(projectPath, 'output', model_name))
+                    torch.save(model.state_dict(), osp.join(projectPath, 'output', model_name, 'best_model.pkl'))
 
                 log.print('-*'*20+'-')
                 log.print('-*'*20+'-')

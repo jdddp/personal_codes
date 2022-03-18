@@ -69,5 +69,5 @@ class InferDataset(Dataset): # 定义自己的数据类
                 print(e)
                 # print("Cannot transform image: {}".format(img_name))
 
-        return img
+        return img, img_name
 

@@ -4,6 +4,7 @@ import argparse
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import json
 
 from models.model import initialize_model
 from dataset.data_loader import MyDataLoader, InferDataLoader
@@ -28,7 +29,7 @@ def main(config):
         criterion=nn.CrossEntropyLoss()
         optimizer_ft=optim.SGD(model_ft.parameters(), lr=0.001, momentum=0.9)
         exp_lr_scheduler = optim.lr_scheduler.StepLR(optimizer_ft, step_size=10, gamma=0.1)
-        best_train_acc,best_val_acc = train_model(config.datasetPath,config.projectPath,config.batch_size,dataloaderDct,datasetSizesDct,model_ft, criterion, optimizer_ft, exp_lr_scheduler, 10,1,1)
+        best_train_acc,best_val_acc = train_model(config.datasetPath,config.projectPath,config.batch_size,dataloaderDct,datasetSizesDct,model_ft, criterion, optimizer_ft, exp_lr_scheduler,config.model_name, 10,1,1)
     else:
         img_list=get_img_list(config.datasetPath)
         dataloader=InferDataLoader(img_list, config.batch_size)
@@ -37,7 +38,9 @@ def main(config):
         pretrained_model=osp.join(config.projectPath, 'output', 'best_model.pkl')
         model_ft.load_state_dict(torch.load(pretrained_model))
         model_ft.to(device)
-        infer(dataloader, model_ft)
+        label2id=json.loads(open(osp.join(config.projectPath,'files','label2id.json')).read())
+        label_list=label2id.keys()
+        infer(dataloader, model_ft,label_list, config.ans_nums, config.projectPath)
 
     # model_ft = model_ft.to(device)
     # model_ft.to(device)
@@ -64,6 +67,8 @@ if __name__ == "__main__":
     parser.add_argument("-t","--mode", type=str, required=True, help="path of dataset")
 
     parser.add_argument("-w","--pretrained_weight", type=str, help="path of weight")
+    parser.add_argument("-a","--ans_nums", type=int,default=3, help="path of weight")
+
 
     config=parser.parse_args()
 
