@@ -29,7 +29,7 @@ def get_and_check(root,name, length):
         vars = vars[0]
     return vars
 
-def get_caregories(xml_list):
+def get_caregory_list(xml_list):
     category_list=[]
     for xmlPath in xml_list:
         tree= ET.parse(xmlPath)
@@ -102,7 +102,7 @@ def xml2json(imgDir, xmlDir, goalDir, ratio=0.9):
 
     xml_list=glob.glob(osp.join(xmlDir, '*.xml'))
 
-    cate_list=get_caregories(xml_list)
+    cate_list=get_caregory_list(xml_list)
     label2id={}
     for cate in cate_list:
         label2id[cate] = int(input('{} : '.format(cate)).strip())
