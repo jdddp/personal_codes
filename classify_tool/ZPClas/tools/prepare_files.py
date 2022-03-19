@@ -16,7 +16,7 @@ def makeMapFileRandom(dirpath, projectPath):
     '''dirpath: path of dataset
     filePath: path of [id<->label]
     '''
-    filePath=osp.join(projectPath)
+    filePath=osp.join(projectPath, 'files')
     makeDir(filePath)
     id2label={}
     label2id={}
@@ -40,7 +40,7 @@ def makeMapFile(dirpath, projectPath):
     '''dirpath: path of dataset
     filePath: path of [id<->label]
     '''
-    filePath=osp.join(projectPath)
+    filePath=osp.join(projectPath, 'files')
     makeDir(filePath)
     label2id={}
     id2label={}
@@ -63,7 +63,7 @@ def makeTrainFiles(dirpath, projectPath,ratio=0.9):
     '''dirpath: path of dataset
     filePath: path of [id<->label]
     '''
-    filePath=osp.join(projectPath)
+    filePath=osp.join(projectPath, 'files')
     makeDir(filePath)
     
     ratio=float(ratio)
