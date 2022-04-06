@@ -46,6 +46,7 @@ def convert(imgDir, xml_list, label2id, goalImgDir):
     json_dict = {"images": [], "annotations": [], "categories":cate_value}
 
     image_id=0
+    bbox_id=0
     for xml_f in xml_list:
         tree = ET.parse(xml_f)
         root = tree.getroot()
@@ -58,13 +59,12 @@ def convert(imgDir, xml_list, label2id, goalImgDir):
             height = int(get_and_check(size, 'height', 1).text)
     
             if width==0 or height==0:
-                img = cv2.imread(osp.join(imgPath, imgname))
+                img = cv2.imread(osp.join(imgDir, imgname))
                 width,height,_ = img.shape
     
             image = {'file_name': imgname, 'height': height, 'width': width, 'id':image_id}
             json_dict['images'].append(image)
 
-            bbox_id=0
             for obj in get(root, 'object'):
                 category = get_and_check(obj, 'name', 1).text
                 category_id = label2id[category]
@@ -74,8 +74,8 @@ def convert(imgDir, xml_list, label2id, goalImgDir):
                 ymin = math.floor(float(get_and_check(bndbox, 'ymin', 1).text))
                 xmax = math.floor(float(get_and_check(bndbox, 'xmax', 1).text))
                 ymax = math.floor(float(get_and_check(bndbox, 'ymax', 1).text))
-                assert(xmax > xmin), "xmax <= xmin, {}".format(line)
-                assert(ymax > ymin), "ymax <= ymin, {}".format(line)
+                assert(xmax > xmin), "xmax <= xmin, {}".format(bndbox)
+                assert(ymax > ymin), "ymax <= ymin, {}".format(bndbox)
                 o_width = abs(xmax - xmin)
                 o_height = abs(ymax - ymin)
                 ann = {'area': o_width*o_height, 
