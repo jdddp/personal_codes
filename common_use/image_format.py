@@ -1,4 +1,3 @@
-from distutils.log import info
 import os
 import os.path as osp
 import sys
@@ -9,8 +8,6 @@ import uuid
 import numpy as np
 import math
 import multiprocessing
-import io
-from io import BytesIO
 from common_use import get_imagelist, makeDir
 
 def preprocess(info_tp):
