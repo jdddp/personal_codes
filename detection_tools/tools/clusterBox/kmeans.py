@@ -45,7 +45,7 @@ def kmeans(boxes, k=9, dist=np.median):
     #随机挑选聚类中心
     clusters = boxes[np.random.choice(rows, k, replace=False)]
 
-    while i<1000:
+    while i<2000:
         # 各个聚类点和中心距离
         for row in range(rows):
             distances[row] = 1 - iou(boxes[row], clusters)

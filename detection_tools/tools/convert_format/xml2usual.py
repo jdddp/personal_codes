@@ -10,6 +10,7 @@ import cv2
 import random
 import math
 import collections
+from tqdm import tqdm
 
 
 def makeDir(dirpath):
@@ -33,11 +34,13 @@ def get_and_check(root,name, length):
 def convert(imgDir, xml_list,goalImgDir):
     label_list=[]
     ansDct=collections.defaultdict(list)
-    for xml_f in xml_list:
+    for xml_f in tqdm(xml_list):
         tree = ET.parse(xml_f)
         root = tree.getroot()
         
         imgname = os.path.basename(xml_f)[:-4] + ".jpg"
+        if not osp.isfile(osp.join(imgDir, imgname)):
+            continue
 
         if cv2.imread(osp.join(imgDir, imgname)) is not None:
 
@@ -51,8 +54,8 @@ def convert(imgDir, xml_list,goalImgDir):
                 ymin = math.floor(float(get_and_check(bndbox, 'ymin', 1).text))
                 xmax = math.floor(float(get_and_check(bndbox, 'xmax', 1).text))
                 ymax = math.floor(float(get_and_check(bndbox, 'ymax', 1).text))
-                assert(xmax > xmin), "xmax <= xmin, {}".format(line)
-                assert(ymax > ymin), "ymax <= ymin, {}".format(line)
+                assert(xmax > xmin), "xmax <= xmin"
+                assert(ymax > ymin), "ymax <= ymin"
                 o_width = abs(xmax - xmin)
                 o_height = abs(ymax - ymin)
                 ansDct[imgname].append({'category':category,'bbox':[xmin,ymin,o_width,o_height]})

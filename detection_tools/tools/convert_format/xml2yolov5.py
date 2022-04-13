@@ -23,8 +23,11 @@ def dct2txt(dct_lst,label2id,tp):
             idd=label2id[dct['category']]
             x1,y1,w,h=dct['bbox']
             xc,yc=x1+w/2.0, y1+h/2.0
-        ans_list.append(str(idd)+' '+str(xc/tp[0])+' '+str(yc/tp[1])+' ' \
-            + str(w/tp[0])+' '+str(h/tp[1]))
+        # ans_list.append(str(idd)+' '+str(xc/tp[0])+' '+str(yc/tp[1])+' ' \
+        #     + str(w/tp[0])+' '+str(h/tp[1]))
+            ans_list.append(str(idd)+' '+"%6f"%(xc/tp[0])+' '+"%6f"%(yc/tp[1])+' ' \
+                + "%6f"%(w/tp[0])+' '+"%6f"%(h/tp[1]))
+            # print(ans_list)
     return ans_list
 
 def makeTxt(dirpath, txtPath):
