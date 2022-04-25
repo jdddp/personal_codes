@@ -1,0 +1,8 @@
+-*-*-*-*-*-*-*-*Begin To Train*-*-*-*-*-*-*-*-
+Step=19/4414, Train Time=0.2563, Train Acc=0.6875
+Step=39/4414, Train Time=0.2563, Train Acc=0.9062
+Step=59/4414, Train Time=0.2543, Train Acc=0.9062
+Step=79/4414, Train Time=0.2564, Train Acc=0.9375
+Step=99/4414, Train Time=0.2553, Train Acc=0.8438
+Step=119/4414, Train Time=0.2573, Train Acc=0.9688
+Step=139/4414, Train Time=0.2554, Train Acc=0.9688

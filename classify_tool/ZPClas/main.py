@@ -23,6 +23,7 @@ def main(config):
     if config.mode =='train':
         dataloaderDct, datasetSizesDct=MyDataLoader(config.datasetPath, config.projectPath, config.batch_size)
         model_ft, input_size = initialize_model(config.model_name, config.num_classes, feature_learning, use_pretrained=True)
+
         model_ft = model_ft.to(device)
         model_ft.to(device)
         #可分别分装函数，切换不同工具

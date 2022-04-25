@@ -19,8 +19,33 @@ def initialize_model(model_name, num_classes, feature_learn=True, use_pretrained
     input_size = 0
 
     # assert model_name in []
+    if model_name == "convnext":
+        '''need torchvison>=1.2
+        2022.1-beyond swin-transformer
+        convnext_tiny = models.convnext_tiny(pretrained=True)
+        convnext_small = models.convnext_small(pretrained=True)
+        convnext_base = models.convnext_base(pretrained=True)
+        convnext_large = models.convnext_large(pretrained=True)
+        '''
+        model_ft = models.convnext_tiny(pretrained=use_pretrained)
+        set_parameter_requires_grad(model_ft, feature_learn)
+        num_ftrs = model_ft.fc.in_features
+        model_ft.fc = nn.Linear(num_ftrs, num_classes)
+        input_size = 224
+    
+    elif model_name == "resnext":
+        '''32_4d: 32组数，4各支路初始通道数;
+        '''
+        model_ft = models.resnext50_32x4d(pretrained=use_pretrained)
 
-    if model_name == "resnet18":
+        # model_ft = models.resnext101_32x8d(pretrained=use_pretrained)
+        set_parameter_requires_grad(model_ft, feature_learn)
+        num_ftrs = model_ft.fc.in_features
+        model_ft.fc = nn.Linear(num_ftrs, num_classes)
+        input_size = 224
+
+
+    elif model_name == "resnet18":
         """ Resnet18
         """
         model_ft = models.resnet18(pretrained=use_pretrained)
