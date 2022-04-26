@@ -22,10 +22,9 @@ def initialize_model(model_name, num_classes, feature_learn=True, use_pretrained
     if model_name == "convnext":
         '''need torchvison>=1.2
         2022.1-beyond swin-transformer
-        convnext_tiny = models.convnext_tiny(pretrained=True)
-        convnext_small = models.convnext_small(pretrained=True)
-        convnext_base = models.convnext_base(pretrained=True)
-        convnext_large = models.convnext_large(pretrained=True)
+        kernel_size->7;bn->ln;gelu->relu
+        convnext_tiny convnext_small convnext_base convnext_large
+
         '''
         model_ft = models.convnext_tiny(pretrained=use_pretrained)
         set_parameter_requires_grad(model_ft, feature_learn)
