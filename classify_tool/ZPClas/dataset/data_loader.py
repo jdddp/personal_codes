@@ -5,7 +5,7 @@ from dataset.dataset import MyDataset, InferDataset
 from torchvision import transforms
 
 
-def MyDataLoader(datasetPath, projectPath, batch_size=64):
+def MyDataLoader(datasetPath, projectPath, weight_sample='',batch_size=64):
 
     data_tranforms={
         'train':transforms.Compose([
@@ -25,7 +25,8 @@ def MyDataLoader(datasetPath, projectPath, batch_size=64):
     image_dataset_dct = {x : MyDataset(datasetPath, 
                         txtPath=osp.join(projectPath, 'files','{}.txt'.format(x)), 
                         data_transforms=data_tranforms, 
-                        mode=x) for x in ['train', 'test']
+                        mode=x,
+                        weight_sample=weight_sample) for x in ['train', 'test']
                     }           
 
     dataloader_dct = {x : torch.utils.data.DataLoader(image_dataset_dct[x],
