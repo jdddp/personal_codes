@@ -7,6 +7,8 @@ import argparse
 from tqdm import tqdm
 
 def copy_test_data(cocoJsonPath, usualJsonPath,imgDir, goalDir,ansJsonDir):
+    '''测试图片，json转为通用格式，方便对比；copy一份方便可视化
+    '''
     os.makedirs(goalDir,exist_ok=True)
 
     ansDct={}
