@@ -173,11 +173,18 @@ def slideCrop(imgPath,goal_dir, dct_lst, scale=640, thre=0.75):
             })
     return ansDct
 
-def slideCropDir(img_dir, goal_dir, jsonPath, gen_jsonPath, scale=640, thre=0.75):
+def slideCropDir(img_dir, goal_dir, jsonPath, scale=640, thre=0.75):
+    '''img_dir: origin path of imgs
+    goal_dir:
+        imgs(split)
+        usual.json(split)
+    jsonPath: usual.json(original)
+    '''
     scale=int(scale)
     thre=float(thre)
 
     goal_imgDir=osp.join(goal_dir, 'imgs')
+    gen_jsonPath=osp.join(goal_dir, 'usual.json')
     os.makedirs(goal_imgDir, exist_ok=True)
 
     res_split={}
