@@ -1,3 +1,7 @@
+'''
+based on usual.json
+convert_tools can be get in ../convert_format/*,which just support coco/xml
+'''
 import os,sys
 import os.path as osp
 import cv2
@@ -25,14 +29,9 @@ def searchInsert(nums, target):
             return middle+1, flag
     return right+1,flag
 
-# nums=[0,1,3,4,5]
-# target=1.5
-# a=searchInsert(nums, target)
-# print(target,a)
-
 
 def slideCrop(imgPath,goal_dir, dct_lst, scale=640, thre=0.75):
-    '''目前针对单一类别;本次判断跨图边框是否有效看他面积占比是否超过0.75
+    '''
     scale: size of img
     thre:threshold for bbox in over 1 img
     '''
@@ -49,7 +48,6 @@ def slideCrop(imgPath,goal_dir, dct_lst, scale=640, thre=0.75):
     row_n=w//w_scale if w%w_scale==0 else w//w_scale+1
     col_n=h//h_scale if h%h_scale==0 else h//h_scale+1
 
-
     #暂存宽高起点;问题：x2不应该共用这个表
     w_s,h_s=w//row_n, h//col_n
     w_lst=[]
@@ -62,9 +60,6 @@ def slideCrop(imgPath,goal_dir, dct_lst, scale=640, thre=0.75):
     for i in range(col_n):
         h_lst.append(i*h_s)
         h_2lst.append(i*h_s+h_scale)
-    # print(w,h)
-    # print(w_lst,h_lst)
-    # print(w_2lst, h_2lst)
     print('图片横向 {} 个；纵向 {} 个'.format(row_n, col_n))
     
     #搞定图片先[[1,2,3],[4,5,6]]
@@ -132,13 +127,9 @@ def slideCrop(imgPath,goal_dir, dct_lst, scale=640, thre=0.75):
                 h_t=h_2lst[y1_pos-1]-y1_b if y1_pos>0 else 0
                 h_m=h_b
                 h_d=y2_b-h_lst[y1_pos+1] if y1_pos+1<len(h_lst) else 0
-                # if x1_b==625:
-                #     pdb.set_trace()
                 if w_l*h_t>thre*s_b and w_l>0 and h_t>0:
                     #左上
                     img_id=(y1_pos-1-1)*row_n+x1_pos
-                    # if img_id==6: 
-                        # pdb.set_trace()
                     ansDct[str(img_id)+'-'+imgname].append(
                         {
                             'category':sgDct['category'],
@@ -148,8 +139,6 @@ def slideCrop(imgPath,goal_dir, dct_lst, scale=640, thre=0.75):
                 if w_l*h_d>thre*s_b and w_l>0 and h_d>0:
                     #左下
                     img_id=(y2_pos-1+1)*row_n+x1_pos
-                    # if img_id==6: 
-                        # pdb.set_trace()
                     ansDct[str(img_id)+'-'+imgname].append(
                         {
                             'category':sgDct['category'],
@@ -157,12 +146,8 @@ def slideCrop(imgPath,goal_dir, dct_lst, scale=640, thre=0.75):
                         }
                     )
                 if w_l*h_m>thre*s_b and w_l>0 and h_m>0:
-                    # if x1_b==625:
-                    #     pdb.set_trace()
                     #左中
                     img_id=(y1_pos-1)*row_n+x1_pos
-                    # if img_id==6: 
-                        # pdb.set_trace()
                     ansDct[str(img_id)+'-'+imgname].append(
                         {
                             'category':sgDct['category'],
@@ -172,8 +157,6 @@ def slideCrop(imgPath,goal_dir, dct_lst, scale=640, thre=0.75):
                 if w_r*h_t>thre*s_b and w_r>0 and h_t>0:
                     #右上
                     img_id=(y1_pos-1-1)*row_n+x2_pos
-                    # if img_id==6: 
-                        # pdb.set_trace()
                     ansDct[str(img_id)+'-'+imgname].append(
                         {
                             'category':sgDct['category'],
@@ -183,8 +166,6 @@ def slideCrop(imgPath,goal_dir, dct_lst, scale=640, thre=0.75):
                 if w_r*h_d>thre*s_b and w_r>0 and h_d>0:
                     #右下
                     img_id=(y2_pos+1-1)*row_n+x2_pos
-                    # if img_id==6: 
-                        # pdb.set_trace()
                     ansDct[str(img_id)+'-'+imgname].append(
                         {
                             'category':sgDct['category'],
@@ -194,8 +175,6 @@ def slideCrop(imgPath,goal_dir, dct_lst, scale=640, thre=0.75):
                 if w_r*h_m>thre*s_b and w_r>0 and h_m>0:
                     #右中
                     img_id=(y2_pos-1)*row_n+x2_pos
-                    # if img_id==6: 
-                        # pdb.set_trace()
                     ansDct[str(img_id)+'-'+imgname].append(
                         {
                             'category':sgDct['category'],
