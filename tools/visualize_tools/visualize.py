@@ -20,6 +20,7 @@ def refrom_res(lst):
     out=''
     for i, (cs, prob) in enumerate(lst):
         img_url = get_url(cs)
+#改动-temp
         out += '<td><div><img src=\"%s\" width=200 height=200 border=1 alt=\"img\" /><br><a href=\"%s\"target=\"_blank\">%.3f</a></div></td>' \
                 % (img_url, img_url, prob)
     return out
@@ -34,15 +35,18 @@ def visulize_cslist(cs_list, filename, decend=1):
         row*col: numbers of imgs in each html
     """
     output = open(filename, 'w')
-    each_row, max_col = 10, 100 
+#改动-temp
+    each_row, max_col =8, 100
     items, col_idx = [], 0
-    
     if not (isinstance(cs_list[0], list) or isinstance(cs_list[0], tuple)):
         cs_list = [(cs, 1) for cs in cs_list]
 
-    cs_list = sorted(cs_list, key=lambda tup:tup[1], reverse=True) if decend == 1 else \
-                sorted(cs_list, key=lambda tup:tup[1])
-                
+
+#改动temp
+    # cs_list = sorted(cs_list, key=lambda tup:tup[1], reverse=True) if decend == 1 else \
+    #             sorted(cs_list, key=lambda tup:tup[1])
+    cs_list = sorted(cs_list, key=lambda tup:int(osp.basename(tup[0]).split('-')[0]))
+         
     for i, (cs, prob) in enumerate(cs_list):
         if len(items) < each_row:
             items.append([cs, prob])
@@ -52,6 +56,7 @@ def visulize_cslist(cs_list, filename, decend=1):
         output.write('</table>\n')
         col_idx += 1
         items = []
+        items.append([cs, prob])
         if col_idx > max_col:
             break
     
@@ -86,11 +91,10 @@ def visual_deep_cluster(jsonPath, htmlDir):
 import pdb
 def visualize_folder(imgdir, filename):
     lst = glob.glob(osp.join(imgdir, '*.jpg'))
-    # pdb.set_trace()
     cslist = [(p, 1) for p in lst]
     visulize_cslist(cslist, filename)
     url = get_url(filename)
-    print("[visualize_folder] %s,[path of html] %s" % (osp.basename(imgdir), url))
+    print("[path of html] >> %s" % ( url))
     return url
 
 def visualize_folders(imgdir, htmlDir):

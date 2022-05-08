@@ -51,7 +51,7 @@ def draw_imgs(dirpath):
                     bbox=sgDct['bbox']
                     color=tuple(np.random.randint(256,size=3))
                     draw.rectangle(((bbox[0], bbox[1]), (bbox[2] + bbox[0], bbox[3] + bbox[1])),width=4,outline =color)
-                    draw.text((bbox[0], bbox[1]), label,fill=color, font=ImageFont.truetype('C:/Windows/Fonts/msyh.ttc',35))
+                    draw.text((bbox[0], bbox[1]), label,fill=color, font=ImageFont.truetype('C:/Windows/Fonts/msyh.ttc',14))
             source_img=source_img.convert('RGB')
             # try:
             source_img.save(osp.join(ansDir, imgname))
@@ -60,6 +60,7 @@ def draw_imgs(dirpath):
 
 #for ../../detection_tools/miss_mistake
 def draw_miss_mistake(imgDir,miss_mistake_json,goalDir):
+    
     os.makedirs(goalDir, exist_ok=True)
     res=json.loads(open(miss_mistake_json).read())
     miss_color=tuple(np.random.randint(256, size=3))
