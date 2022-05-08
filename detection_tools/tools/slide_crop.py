@@ -5,6 +5,7 @@ import json
 import shutil
 import collections
 import json
+import pdb
 
 def searchInsert(nums, target):
     '''二分排序寻找插入位置
@@ -48,25 +49,34 @@ def slideCrop(imgPath,goal_dir, dct_lst, scale=640, thre=0.75):
     row_n=w//w_scale if w%w_scale==0 else w//w_scale+1
     col_n=h//h_scale if h%h_scale==0 else h//h_scale+1
 
-    #暂存宽高起点
+
+    #暂存宽高起点;问题：x2不应该共用这个表
     w_s,h_s=w//row_n, h//col_n
     w_lst=[]
     h_lst=[]
-    for i in range(w_s):
+    w_2lst=[0]
+    h_2lst=[0]
+    for i in range(row_n):
         w_lst.append(i*w_s)
-    for i in range(h_s):
+        w_2lst.append(i*w_s+w_scale)
+    for i in range(col_n):
         h_lst.append(i*h_s)
+        h_2lst.append(i*h_s+h_scale)
+    # print(w,h)
+    # print(w_lst,h_lst)
+    # print(w_2lst, h_2lst)
+    print('图片横向 {} 个；纵向 {} 个'.format(row_n, col_n))
     
     #搞定图片先[[1,2,3],[4,5,6]]
     #row_n is num, w_s is 宽高起点
-    for i in range(row_n):
-        for j in range(col_n):
-            img_id=str(j*row_n+i+1)
-            #边缘越界判断
-            h_need=min(j*h_s+h_scale, h)
-            w_need=min(i*w_s+w_scale, w)
+    for i in range(col_n):
+        for j in range(row_n):
+            img_id=str(i*row_n+j+1)
+           #边缘越界判断
+            h_need=min(i*h_s+h_scale, h)
+            w_need=min(j*w_s+w_scale, w)
 
-            img_temp=img[j*h_s:h_need, i*w_s:w_need,:]
+            img_temp=img[i*h_s:h_need, j*w_s:w_need,:]
             cv2.imwrite(osp.join(goal_dir, img_id+'-'+imgname), img_temp)
     
     #w_lst,h_lst判断框从属
@@ -74,103 +84,502 @@ def slideCrop(imgPath,goal_dir, dct_lst, scale=640, thre=0.75):
         x1_b,y1_b,w_b,h_b=sgDct['bbox']
         s_b=w_b*h_b
         x2_b,y2_b=x1_b+w_b,y1_b+h_b
-        #确定x1,y1,x2,y2分别属于哪个区间
-        #flag=0,位于输出位置左侧；flag=1，位于输出位置
-        (x1_pos,flag_x1),(x2_pos,flag_x2)=searchInsert(w_lst,x1_b), searchInsert(w_lst,x2_b)
-        (y1_pos, flag_y1),(y2_pos, flag_y2)=searchInsert(h_lst,y1_b), searchInsert(h_lst,y2_b)
-        #四种:刚好在某一块；横跨了；上下取舍；左右取舍
-        if (x1_pos<x2_pos and flag_x2==1) or (x1_pos==x2_pos):
-            #左右无需取舍
-            if (y1_pos<y2_pos and flag_y2==1) or (y1_pos==y2_pos):
-                #上下无需取舍
-                x1_id=x1_pos 
-                y1_id=y1_pos 
-                img_id=(y1_id-1)*col_n+x1_id
-
-                ansDct[str(img_id)+'-'+imgname].append({
-                    "category": sgDct['category'],
-                    "bbox": [x1_b-(x1_id-1)*w_scale, y1_b-(y1_id-1)*h_scale, w_b, h_b]
-                })
-            else:
-                #y1_pos<y2_pos
-                h_up,h_down=(y1_pos*h_scale)-y1_b, y2_b-(y1_pos*h_scale)
-                if h_up/h_b>=thre:
-                    #在上
-                    x1_id=x1_pos
-                    y1_id=y1_pos
-                    img_id=(y1_id-1)*col_n+x1_id
-                    ansDct[str(img_id)+'-'+imgname].append({
-                    "category": sgDct['category'],
-                    "bbox": [x1_b-(x1_id-1)*w_scale, y1_b-(y1_id-1)*h_scale, w_b, h_up]
-                })
-                else:
-                    x1_id=x1_pos
-                    y1_id=y2_pos
-                    img_id=(y1_id-1)*col_n+x1_id
-                    ansDct[str(img_id)+'-'+imgname].append({
-                    "category": sgDct['category'],
-                    "bbox": [x1_b-(x1_id-1)*w_scale, (y1_id-1)*h_scale, w_b, h_down]
-                })
-        #上下无需取舍,左右需取舍;x1_pos<x2_pos
-        elif ((y1_pos<y2_pos and flag_y2==1) or (y1_pos==y2_pos)) \
-            and (x1_pos!=x2_pos):
-            y1_id=y1_pos
-            w_left,w_right=(x1_pos*w_scale)-x1_b, x2_b-(x1_pos*w_scale)
-            if w_left/w_b>=thre:
-                #在左
-                x1_id=x1_pos
-                img_id=(y1_id-1)*col_n+x1_id
-                ansDct[str(img_id)+'-'+imgname].append({
-                "category": sgDct['category'],
-                "bbox": [x1_b-(x1_id-1)*w_scale, y1_b-(y1_id-1)*h_scale, w_left, h_b]
-            })
-            if w_right/w_b>=thre:
-                #在右
-                x1_id=x2_pos
-                img_id=(y1_id-1)*col_n+x1_id
-                ansDct[str(img_id)+'-'+imgname].append({
-                "category": sgDct['category'],
-                "bbox": [(x1_id-1)*w_scale, y1_b-(y1_id-1)*h_scale, w_right, h_b]
-            })
-        #上下左右都需取舍
-        else:
-            #s_b
-            s_thre=s_b*thre
-            w_l,w_r=x1_pos*w_scale-x1_b, x2_b-x1_pos*w_scale
-            h_t,h_d=y1_pos*h_scale-y1_b, y2_b-y1_pos*h_scale
-            s_tl, s_tr, s_dl, s_dr=w_l*h_t, w_r*h_t, w_l*h_d, w_r*h_d
-            if s_tl==max(s_tl, s_tr, s_dl, s_dr) and s_tl>=s_thre:
-                #left top
-                x1_id, y1_id=x1_pos, y1_pos
-                img_id=(y1_id-1)*col_n+x1_id
-                ansDct[str(img_id)+'-'+imgname].append({
-                "category": sgDct['category'],
-                "bbox": [x1_b-(x1_id-1)*w_scale, y1_b-(y1_id-1)*h_scale, w_l, h_t]
-            })
-            if s_dl==max(s_tl, s_tr, s_dl, s_dr) and s_tl>=s_thre:
-                #left down
-                x1_id, y1_id=x1_pos, y2_pos
-                img_id=(y1_id-1)*col_n+x1_id
-                ansDct[str(img_id)+'-'+imgname].append({
-                "category": sgDct['category'],
-                "bbox": [x1_b-(x1_id-1)*w_scale, (y1_id-1)*h_scale, w_l, h_d]
-            })
-            if s_tr==max(s_tl, s_tr, s_dl, s_dr) and s_tl>=s_thre:
-                #right up
-                x1_id, y1_id=x2_pos, y1_pos
-                img_id=(y1_id-1)*col_n+x1_id
-                ansDct[str(img_id)+'-'+imgname].append({
-                "category": sgDct['category'],
-                "bbox": [(x1_id-1)*w_scale, y1_b-(y1_id-1)*h_scale, w_r, h_t]
-            })
-            if s_dr==max(s_tl, s_tr, s_dl, s_dr) and s_tl>=s_thre:
-                #right dwon
-                x1_id, y1_id=x2_pos, y2_pos
-                img_id=(y1_id-1)*col_n+x1_id
-                ansDct[str(img_id)+'-'+imgname].append({
-                "category": sgDct['category'],
-                "bbox": [(x1_id-1)*w_scale, (y1_id-1)*h_scale, w_r, h_d]
-            })
+        (x1_pos,flag_x1),(x2_pos,flag_x2)=searchInsert(w_lst,x1_b), searchInsert(w_2lst,x2_b)
+        (y1_pos, flag_y1),(y2_pos, flag_y2)=searchInsert(h_lst,y1_b), searchInsert(h_2lst,y2_b)
+        if x1_pos<x2_pos:
+            w_l=w_2lst[x1_pos]-x1_b
+            w_r=x2_b-w_lst[x2_pos-1] #-1
+            if y1_pos<y2_pos:
+                h_t=h_2lst[y1_pos]-y1_b
+                h_d=y2_b-h_lst[y2_pos]
+                if w_l*h_t>thre*s_b and w_l>0 and h_t>0:
+                    #左上
+                    img_id=(y1_pos-1)*row_n+x1_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x1_pos-1],y1_b-h_lst[y1_pos-1], w_l, h_t]
+                        }
+                    )
+                if w_l*h_d>thre*s_b and w_l>0 and h_d>0:
+                    #左下
+                    img_id=(y2_pos-1)*row_n+x1_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x1_pos-1],y1_b-h_lst[y2_pos-1], w_l, h_d]
+                        }
+                    )
+                if w_r*h_t>thre*s_b and w_r>0 and h_t>0:
+                    #右上
+                    img_id=(y1_pos-1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos-1],y1_b-h_lst[y1_pos-1], w_r, h_t]
+                        }
+                    )
+                if w_r*h_d>thre*s_b and w_r>0 and h_d>0:
+                    #右下
+                    img_id=(y2_pos-1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos-1],y1_b-h_lst[y2_pos-1], w_r, h_t]
+                        }
+                    )
+            elif y1_pos==y2_pos:
+                h_t=h_2lst[y1_pos-1]-y1_b if y1_pos>0 else 0
+                h_m=h_b
+                h_d=y2_b-h_lst[y1_pos+1] if y1_pos+1<len(h_lst) else 0
+                # if x1_b==625:
+                #     pdb.set_trace()
+                if w_l*h_t>thre*s_b and w_l>0 and h_t>0:
+                    #左上
+                    img_id=(y1_pos-1-1)*row_n+x1_pos
+                    # if img_id==6: 
+                        # pdb.set_trace()
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x1_pos-1],y1_b-h_lst[y1_pos-1-1], w_l, h_t]
+                        }
+                    )
+                if w_l*h_d>thre*s_b and w_l>0 and h_d>0:
+                    #左下
+                    img_id=(y2_pos-1+1)*row_n+x1_pos
+                    # if img_id==6: 
+                        # pdb.set_trace()
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x1_pos-1],y1_b-h_lst[y2_pos+1-1], w_l, h_d]
+                        }
+                    )
+                if w_l*h_m>thre*s_b and w_l>0 and h_m>0:
+                    # if x1_b==625:
+                    #     pdb.set_trace()
+                    #左中
+                    img_id=(y1_pos-1)*row_n+x1_pos
+                    # if img_id==6: 
+                        # pdb.set_trace()
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x1_pos-1],y1_b-h_lst[y2_pos-1], w_l, h_m]
+                        }
+                    )
+                if w_r*h_t>thre*s_b and w_r>0 and h_t>0:
+                    #右上
+                    img_id=(y1_pos-1-1)*row_n+x2_pos
+                    # if img_id==6: 
+                        # pdb.set_trace()
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[max(x1_b-w_lst[x2_pos-1],0),y1_b-h_lst[y1_pos-1-1], w_r, h_t]
+                        }
+                    )
+                if w_r*h_d>thre*s_b and w_r>0 and h_d>0:
+                    #右下
+                    img_id=(y2_pos+1-1)*row_n+x2_pos
+                    # if img_id==6: 
+                        # pdb.set_trace()
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[max(x1_b-w_lst[x2_pos-1],0),y1_b-h_lst[y2_pos+1-1], w_r, h_d]
+                        }
+                    )
+                if w_r*h_m>thre*s_b and w_r>0 and h_m>0:
+                    #右中
+                    img_id=(y2_pos-1)*row_n+x2_pos
+                    # if img_id==6: 
+                        # pdb.set_trace()
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[max(x1_b-w_lst[x2_pos-1],0),y1_b-h_lst[y2_pos-1], w_r, h_m]
+                        }
+                    )
+            else: #y1_pos>y2_pos；必然都有
+                h_t,h_d=h_b,h_b
+                if w_l*h_t>thre*s_b:
+                    #l 上
+                    img_id=(y2_pos-1)*row_n+x1_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x1_pos-1],y1_b-h_lst[y2_pos-1], w_l, h_t]
+                        }
+                    )
+                if w_l*h_d>thre*s_b:
+                    #l下
+                    img_id=(y1_pos-1)*row_n+x1_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x1_pos-1],y1_b-h_lst[y1_pos-1], w_l, h_d]
+                        }
+                    )
+                if w_r*h_t>thre*s_b:
+                    #右上
+                    img_id=(y2_pos-1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos-1],y1_b-h_lst[y2_pos-1], w_r, h_t]
+                        }
+                    )
+                if w_r*h_d>thre*s_b:
+                    #右下
+                    img_id=(y1_pos-1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos-1],y1_b-h_lst[y1_pos-1], w_r, h_d]
+                        }
+                    )
+        elif x1_pos==x2_pos:
+            w_l=w_2lst[x1_pos-1]-x1_b if x1_pos>0 else 0
+            w_m=w_b
+            w_r=x2_b-w_lst[x1_pos+1] if x1_pos+1<len(w_lst) else 0
+            if y1_pos<y2_pos:
+                h_t=h_2lst[y1_pos]-y1_b
+                h_d=y2_b-h_lst[y2_pos]
+                if w_l*h_t>thre*s_b and w_l>0 and h_t>0:
+                    #左上
+                    img_id=(y1_pos-1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos-1-1],y1_b-h_lst[y1_pos-1], w_l, h_t]
+                        }
+                    )
+                if w_r*h_t>thre*s_b and w_r>0 and h_t>0:
+                    #右上
+                    img_id=(y1_pos-1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos+1-1],y1_b-h_lst[y1_pos-1], w_r, h_t]
+                        }
+                    )
+                if w_m*h_t>thre*s_b and w_m>0 and h_t>0:
+                    #中上
+                    img_id=(y1_pos-1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos-1],y1_b-h_lst[y1_pos-1], w_m, h_t]
+                        }
+                    )
+                if w_l*h_d>thre*s_b and w_l>0 and h_d>0:
+                    #左xia
+                    img_id=(y2_pos-1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos-1-1],y1_b-h_lst[y2_pos-1], w_l, h_d]
+                        }
+                    )
+                if w_r*h_d>thre*s_b and w_r>0 and h_d>0:
+                    #右xia
+                    img_id=(y2_pos-1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos+1-1],y1_b-h_lst[y2_pos-1], w_r, h_d]
+                        }
+                    )
+                if w_m*h_d>thre*s_b and w_m>0 and h_d>0:
+                    #中xia
+                    img_id=(y2_pos-1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos-1],y1_b-h_lst[y2_pos-1], w_m, h_d]
+                        }
+                    )
+            elif y1_pos==y2_pos:
+                h_t=h_2lst[y1_pos-1]-y1_b if y1_pos>0 else 0
+                h_m=h_b
+                h_d=y2_b-h_lst[y1_pos+1] if y1_pos+1<len(h_lst) else 0
+                if w_l*h_t>thre*s_b and w_l>0 and h_t>0:
+                    #左上
+                    img_id=(y1_pos-1-1)*row_n+x2_pos-1
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos-1-1],y1_b-h_lst[y2_pos-1-1], w_l, h_t]
+                        }
+                    )
+                if w_l*h_m>thre*s_b and w_l>0 and h_m>0:
+                    #左zhong
+                    img_id=(y1_pos-1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos-1-1],y1_b-h_lst[y1_pos-1], w_l, h_m]
+                        }
+                    )
+                if w_l*h_d>thre*s_b and w_l>0 and h_d>0:
+                    #左xia
+                    img_id=(y1_pos-1+1)*row_n+x2_pos-1
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos-1-1],y1_b-h_lst[y1_pos+1-1], w_l, h_d]
+                        }
+                    )
+                if w_m*h_t>thre*s_b and w_m>0 and h_t>0:
+                    #zhong上
+                    img_id=(y1_pos-1-1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos-1],y1_b-h_lst[y1_pos-1-1], w_m, h_t]
+                        }
+                    )
+                if w_m*h_m>thre*s_b and w_m>0 and h_m>0:
+                    #zhongzhong
+                    img_id=(y1_pos-1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos-1],y1_b-h_lst[y2_pos-1], w_m, h_m]
+                        }
+                    )
+                if w_m*h_d>thre*s_b and w_m>0 and h_d>0:
+                    #zhongxia
+                    img_id=(y1_pos-1+1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos-1],y1_b-h_lst[y1_pos+1-1], w_m, h_d]
+                        }
+                    )
+                if w_r*h_t>thre*s_b and w_r>0 and h_t>0:
+                    #you上
+                    img_id=(y1_pos-1-1)*row_n+x2_pos+1
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos+1-1],y1_b-h_lst[y1_pos-1-1], w_r, h_t]
+                        }
+                    )
+                if w_r*h_m>thre*s_b and w_r>0 and h_m>0:
+                    #youzhong
+                    img_id=(y1_pos-1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos+1-1],y1_b-h_lst[y1_pos-1], w_r, h_m]
+                        }
+                    )
+                if w_r*h_d>thre*s_b and w_r>0 and h_d>0:
+                    #you xia
+                    img_id=(y1_pos-1+1)*row_n+x2_pos+1
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos+1-1],y1_b-h_lst[y1_pos+1-1], w_r, h_d]
+                        }
+                    )
+            else: #y1>y2
+                h_t,h_d=h_b,h_b
+                if w_l*h_t>thre*s_b and w_l>0 and h_t>0:
+                    #l t
+                    img_id=(y2_pos-1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos-1-1],y1_b-h_lst[y2_pos-1], w_l, h_t]
+                        }
+                    )
+                if w_l*h_d>thre*s_b and w_l>0 and h_d>0:
+                    #l d
+                    img_id=(y1_pos-1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos-1-1],y1_b-h_lst[y1_pos-1], w_l, h_d]
+                        }
+                    )
+                if w_m*h_t>thre*s_b and w_m>0 and h_t>0:
+                    #m t
+                    img_id=(y2_pos-1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos-1],y1_b-h_lst[y2_pos-1], w_m, h_t]
+                        }
+                    )
+                if w_m*h_d>thre*s_b and w_m>0 and h_d>0:
+                    #m d
+                    img_id=(y1_pos-1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos-1],y1_b-h_lst[y1_pos-1], w_m, h_d]
+                        }
+                    )
+                if w_r*h_t>thre*s_b and w_r>0 and h_t>0:
+                    #r t
+                    img_id=(y2_pos-1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos+1-1],y1_b-h_lst[y2_pos-1], w_r, h_t]
+                        }
+                    )
+                if w_r*h_d>thre*s_b and w_r>0 and h_d>0:
+                    #r d
+                    img_id=(y1_pos-1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos+1-1],y1_b-h_lst[y1_pos-1], w_r, h_d]
+                        }
+                    )
+        else: #x1_pos>x2_pos
+            w_l,w_r=w_b, w_b
+            if y1_pos<y2_pos:
+                h_t=h_2lst[y1_pos]-y1_b
+                h_d=y2_b-h_lst[y2_pos]
+                if w_l*h_t>thre*s_b and w_l>0 and h_t>0:
+                    #l t
+                    img_id=(y1_pos-1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos-1],y1_b-h_lst[y1_pos-1], w_l, h_t]
+                        }
+                    )
+                if w_l*h_d>thre*s_b and w_l>0 and h_d>0:
+                    #l d
+                    img_id=(y2_pos-1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos-1],y1_b-h_lst[y2_pos-1], w_l, h_d]
+                        }
+                    )
+                if w_r*h_t>thre*s_b and w_r>0 and h_t>0:
+                    #r t
+                    img_id=(y1_pos-1)*row_n+x1_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x1_pos-1],y1_b-h_lst[y1_pos-1], w_r, h_t]
+                        }
+                    )
+                if w_r*h_d>thre*s_b and w_r>0 and h_d>0:
+                    #r d
+                    img_id=(y2_pos-1)*row_n+x1_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x1_pos-1],y1_b-h_lst[y2_pos-1], w_r, h_d]
+                        }
+                    )
+            elif y1_pos==y2_pos:
+                h_t=h_2lst[y1_pos-1]-y1_b if y1_pos>1 else 0
+                h_m=h_b
+                h_d=y2_b-h_lst[y1_pos+1] if y1_pos+1<len(h_lst) else 0
+                if w_l*h_t>thre*s_b and w_l>0 and h_t>0:
+                    #l t
+                    img_id=(y1_pos-1-1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos-1],y1_b-h_lst[y2_pos-1-1], w_l, h_t]
+                        }
+                    )
+                if w_l*h_d>thre*s_b and w_l>0 and h_d>0:
+                    #l d
+                    img_id=(y2_pos-1+1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos-1],y1_b-h_lst[y2_pos+1-1], w_l, h_d]
+                        }
+                    )
+                if w_l*h_m>thre*s_b and w_l>0 and h_m>0:
+                    #l m
+                    img_id=(y1_pos-1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos-1],y1_b-h_lst[y2_pos-1], w_l, h_m]
+                        }
+                    )
+                if w_r*h_t>thre*s_b and w_r>0 and h_t>0:
+                    #r t
+                    img_id=(y2_pos-1-1)*row_n+x1_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x1_pos-1],y1_b-h_lst[y2_pos-1-1], w_r, h_t]
+                        }
+                    )
+                if w_r*h_m>thre*s_b and w_r>0 and h_m>0:
+                    #r m
+                    img_id=(y1_pos-1)*row_n+x1_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x1_pos-1],y1_b-h_lst[y2_pos-1], w_r, h_m]
+                        }
+                    )
+                if w_r*h_d>thre*s_b and w_r>0 and h_d>0:
+                    #r d
+                    img_id=(y2_pos-1+1)*row_n+x1_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x1_pos-1],y1_b-h_lst[y2_pos+1-1], w_r, h_d]
+                        }
+                    )
+            else: #y1_pos>y2_pos；必然都有
+                h_t,h_d=h_b,h_b
+                if w_l*h_t>thre*s_b and w_l>0 and h_t>0:
+                    #l t
+                    img_id=(y2_pos-1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos-1],y1_b-h_lst[y2_pos-1], w_l, h_t]
+                        }
+                    )
+                if w_l*h_d>thre*s_b and w_l>0 and h_d>0:
+                    #l d
+                    img_id=(y1_pos-1)*row_n+x2_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x2_pos-1],y1_b-h_lst[y1_pos-1], w_l, h_d]
+                        }
+                    )
+                if w_r*h_t>thre*s_b and w_r>0 and h_t>0:
+                    #r t
+                    img_id=(y2_pos-1)*row_n+x1_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x1_pos-1],y1_b-h_lst[y2_pos-1], w_r, h_t]
+                        }
+                    )
+                if w_r*h_d>thre*s_b and w_r>0 and h_d>0:
+                    #r d
+                    img_id=(y1_pos-1)*row_n+x1_pos
+                    ansDct[str(img_id)+'-'+imgname].append(
+                        {
+                            'category':sgDct['category'],
+                            'bbox':[x1_b-w_lst[x1_pos-1],y1_b-h_lst[y1_pos-1], w_r, h_d]
+                        }
+                    )
+           
     return ansDct
 
 def slideCropDir(img_dir, goal_dir, jsonPath, scale=640, thre=0.75):
@@ -179,6 +588,7 @@ def slideCropDir(img_dir, goal_dir, jsonPath, scale=640, thre=0.75):
         imgs(split)
         usual.json(split)
     jsonPath: usual.json(original)
+    scale: crop_img h,w; can be set separately in sub_function
     '''
     scale=int(scale)
     thre=float(thre)
