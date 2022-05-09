@@ -55,9 +55,9 @@ def find_mistake_box(gt_path,pred_path,ansJson,threshold=0.5):
         if len(dct_lst)==0:
             ansDct[imgname]={
                 'miss':[],
-                'mistake':pred_res[imgname]
+                'mistake':pred_res[imgname] if imgname in pred_res else []
             }
-        elif len(pred_res[imgname])==0:
+        elif len(pred_res[imgname])==0 or imgname not in pred_res:
             ansDct[imgname]={
                 'miss':gt_res[imgname],
                 'mistake':[]
