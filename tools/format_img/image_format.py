@@ -47,6 +47,8 @@ def format(imgpath, outdir):
     info_tp=(imgpath, short_size, osp.join(outdir, str(uuid.uuid1())+'.jpg'))
     preprocess(info_tp)
 
+def
+
 if __name__ == '__main__':
     if len(sys.argv) > 1 :
         func = getattr(sys.modules[__name__], sys.argv[1])
