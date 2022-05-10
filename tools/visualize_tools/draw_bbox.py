@@ -49,9 +49,13 @@ def draw_imgs(dirpath):
                 for sgDct in dctLst:
                     label=sgDct['category'] 
                     bbox=sgDct['bbox']
+                    # score=sgDct['score']
                     color=tuple(np.random.randint(256,size=3))
                     draw.rectangle(((bbox[0], bbox[1]), (bbox[2] + bbox[0], bbox[3] + bbox[1])),width=4,outline =color)
-                    draw.text((bbox[0], bbox[1]), label,fill=color, font=ImageFont.truetype('C:/Windows/Fonts/msyh.ttc',14))
+                    # draw.text((bbox[0], bbox[1]), '{}_{:.2}'.format(label,score),fill=color, font=ImageFont.truetype("/usr/share/fonts/truetype/pagul/Pagul.ttf", 20))
+                    
+                    draw.text((bbox[0], bbox[1]), label,fill=color, font=ImageFont.truetype('/usr/share/fonts/truetype/pagul/Pagul.ttf',14))
+                    #C:/Windows/Fonts/msyh.ttc
             source_img=source_img.convert('RGB')
             # try:
             source_img.save(osp.join(ansDir, imgname))
@@ -79,14 +83,15 @@ def draw_miss_mistake(imgDir,miss_mistake_json,goalDir):
             score = sgDct['score']
             bbox = sgDct['bbox']
             draw.rectangle(((bbox[0], bbox[1]), (bbox[2] + bbox[0], bbox[3] + bbox[1])),width=wid_th+1,outline =mistake_color)
-            draw.text((bbox[0], bbox[1]), '{}_{:.2}'.format(label,score),fill=mistake_color, font=ImageFont.truetype("C:/Windows/Fonts/msyh.ttc", 35))
+            draw.text((bbox[0], bbox[1]), '{}_{:.2}'.format(label,score),fill=mistake_color, font=ImageFont.truetype("/usr/share/fonts/truetype/pagul/Pagul.ttf", 15))
         
         for sgDct in img_info['miss']:
             label = sgDct['category']
             # score = sgDct['score']
             bbox = sgDct['bbox']
             draw.rectangle(((bbox[0], bbox[1]), (bbox[2] + bbox[0], bbox[3] + bbox[1])),width=wid_th+1,outline =miss_color)
-            draw.text((bbox[0], bbox[1]), '{}'.format(label),fill=miss_color, font=ImageFont.truetype("C:/Windows/Fonts/msyh.ttc", 35))
+            draw.text((bbox[0], bbox[1]), '{}'.format(label),fill=miss_color, font=ImageFont.truetype("/usr/share/fonts/truetype/pagul/Pagul.ttf", 15))
+            # draw.text((bbox[0], bbox[1]), '{}_{:.2}'.format(label,score),fill=color, font=ImageFont.truetype("C:/Windows/Fonts/msyh.ttc"))
 
         source_img.save(osp.join(goalDir,imgname))
 
