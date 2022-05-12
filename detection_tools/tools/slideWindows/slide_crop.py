@@ -81,6 +81,7 @@ def slideCrop(imgPath,goal_dir, dct_lst, scale=640, thre=0.75):
         x2_b,y2_b=x1_b+w_b,y1_b+h_b
         (x1_pos,flag_x1),(x2_pos,flag_x2)=searchInsert(w_lst,x1_b), searchInsert(w_2lst,x2_b)
         (y1_pos, flag_y1),(y2_pos, flag_y2)=searchInsert(h_lst,y1_b), searchInsert(h_2lst,y2_b)
+
         if x1_pos<x2_pos:
             w_l=w_2lst[x1_pos]-x1_b
             w_r=x2_b-w_lst[x2_pos-1] #-1
@@ -222,7 +223,7 @@ def slideCrop(imgPath,goal_dir, dct_lst, scale=640, thre=0.75):
         elif x1_pos==x2_pos:
             w_l=w_2lst[x1_pos-1]-x1_b if x1_pos>0 else 0
             w_m=w_b
-            w_r=x2_b-w_lst[x1_pos+1] if x1_pos+1<len(w_lst) else 0
+            w_r=x2_b-w_lst[x1_pos] if x1_pos+1<=len(w_lst) else 0
             if y1_pos<y2_pos:
                 h_t=h_2lst[y1_pos]-y1_b
                 h_d=y2_b-h_lst[y2_pos]
@@ -295,7 +296,7 @@ def slideCrop(imgPath,goal_dir, dct_lst, scale=640, thre=0.75):
                     )
                 if w_l*h_m>thre*s_b and w_l>0 and h_m>0:
                     #左zhong
-                    img_id=(y1_pos-1)*row_n+x2_pos
+                    img_id=(y1_pos-1)*row_n+x2_pos-1
                     ansDct[str(img_id)+'-'+imgname].append(
                         {
                             'category':sgDct['category'],
@@ -344,16 +345,16 @@ def slideCrop(imgPath,goal_dir, dct_lst, scale=640, thre=0.75):
                     ansDct[str(img_id)+'-'+imgname].append(
                         {
                             'category':sgDct['category'],
-                            'bbox':[x1_b-w_lst[x2_pos+1-1],y1_b-h_lst[y1_pos-1-1], w_r, h_t]
+                            'bbox':[max(x1_b-w_lst[x2_pos+1-1],0),y1_b-h_lst[y1_pos-1-1], w_r, h_t]
                         }
                     )
                 if w_r*h_m>thre*s_b and w_r>0 and h_m>0:
                     #youzhong
-                    img_id=(y1_pos-1)*row_n+x2_pos
+                    img_id=(y1_pos-1)*row_n+x2_pos+1
                     ansDct[str(img_id)+'-'+imgname].append(
                         {
                             'category':sgDct['category'],
-                            'bbox':[x1_b-w_lst[x2_pos+1-1],y1_b-h_lst[y1_pos-1], w_r, h_m]
+                            'bbox':[max(x1_b-w_lst[x2_pos+1-1],0),y1_b-h_lst[y1_pos-1], w_r, h_m]
                         }
                     )
                 if w_r*h_d>thre*s_b and w_r>0 and h_d>0:
@@ -362,7 +363,7 @@ def slideCrop(imgPath,goal_dir, dct_lst, scale=640, thre=0.75):
                     ansDct[str(img_id)+'-'+imgname].append(
                         {
                             'category':sgDct['category'],
-                            'bbox':[x1_b-w_lst[x2_pos+1-1],y1_b-h_lst[y1_pos+1-1], w_r, h_d]
+                            'bbox':[max(x1_b-w_lst[x2_pos+1-1], 0),y1_b-h_lst[y1_pos+1-1], w_r, h_d]
                         }
                     )
             else: #y1>y2
@@ -465,14 +466,14 @@ def slideCrop(imgPath,goal_dir, dct_lst, scale=640, thre=0.75):
             elif y1_pos==y2_pos:
                 h_t=h_2lst[y1_pos-1]-y1_b if y1_pos>1 else 0
                 h_m=h_b
-                h_d=y2_b-h_lst[y1_pos+1] if y1_pos+1<len(h_lst) else 0
+                h_d=y2_b-h_lst[y1_pos] if y1_pos+1<=len(h_lst) else 0
                 if w_l*h_t>thre*s_b and w_l>0 and h_t>0:
                     #l t
                     img_id=(y1_pos-1-1)*row_n+x2_pos
                     ansDct[str(img_id)+'-'+imgname].append(
                         {
                             'category':sgDct['category'],
-                            'bbox':[x1_b-w_lst[x2_pos-1],y1_b-h_lst[y2_pos-1-1], w_l, h_t]
+                            'bbox':[x1_b-w_lst[x2_pos-1],max(y1_b-h_lst[y2_pos-1-1], 0), w_l, h_t]
                         }
                     )
                 if w_l*h_d>thre*s_b and w_l>0 and h_d>0:
@@ -481,7 +482,7 @@ def slideCrop(imgPath,goal_dir, dct_lst, scale=640, thre=0.75):
                     ansDct[str(img_id)+'-'+imgname].append(
                         {
                             'category':sgDct['category'],
-                            'bbox':[x1_b-w_lst[x2_pos-1],y1_b-h_lst[y2_pos+1-1], w_l, h_d]
+                            'bbox':[x1_b-w_lst[x2_pos-1],max(y1_b-h_lst[y2_pos+1-1],0), w_l, h_d]
                         }
                     )
                 if w_l*h_m>thre*s_b and w_l>0 and h_m>0:
@@ -517,7 +518,7 @@ def slideCrop(imgPath,goal_dir, dct_lst, scale=640, thre=0.75):
                     ansDct[str(img_id)+'-'+imgname].append(
                         {
                             'category':sgDct['category'],
-                            'bbox':[x1_b-w_lst[x1_pos-1],y1_b-h_lst[y2_pos+1-1], w_r, h_d]
+                            'bbox':[x1_b-w_lst[x1_pos-1],max(y1_b-h_lst[y2_pos+1-1],0), w_r, h_d]
                         }
                     )
             else: #y1_pos>y2_pos；必然都有
@@ -581,7 +582,8 @@ def slideCropDir(img_dir, goal_dir, jsonPath, scale=640, thre=0.75):
     res=json.loads(open(jsonPath).read())
     for imgname, dct_lst in res.items():
         img_path=osp.join(img_dir, imgname)
-        res_split.update(slideCrop(img_path, goal_imgDir,dct_lst,scale,thre))
+        if osp.isfile(img_path):
+            res_split.update(slideCrop(img_path, goal_imgDir,dct_lst,scale,thre))
     
     for imgname in os.listdir(goal_imgDir):
         if imgname not in res_split:
