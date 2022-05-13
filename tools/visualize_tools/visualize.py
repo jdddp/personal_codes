@@ -12,13 +12,15 @@ def get_url(abs_imgpath,port_num=8225):
     personal_url='http://10.6.174.80:%d'%port_num+'\\'
     if abs_imgpath.startswith('E:\\vsCodes\\'):
         return abs_imgpath.replace('E:\\vsCodes\\', personal_url)
-
-def get_url_ubuntu(abs_imgpath,port_num=8225):
-    if not osp.isfile(abs_imgpath):
-        print('{} is not a imgpath'.format(abs_imgpath))
-    personal_url='http://127.0.0.1:%d'%port_num+'/'
-    if abs_imgpath.startswith('/home/linke/codes/'):
+    elif abs_imgpath.startswith('/home/linke/codes/'):  #127.0.0.1
         return abs_imgpath.replace('/home/linke/codes/', personal_url)
+
+# def get_url_ubuntu(abs_imgpath,port_num=8225):
+#     if not osp.isfile(abs_imgpath):
+#         print('{} is not a imgpath'.format(abs_imgpath))
+#     personal_url='http://127.0.0.1:%d'%port_num+'/'
+#     if abs_imgpath.startswith('/home/linke/codes/'):
+#         return abs_imgpath.replace('/home/linke/codes/', personal_url)
 
 def refrom_res(lst):
     """format table of imagelist
@@ -27,7 +29,7 @@ def refrom_res(lst):
     # out='<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />'
     out=''
     for i, (cs, prob) in enumerate(lst):
-        img_url = get_url_ubuntu(cs)
+        img_url = get_url(cs)
 #改动-temp
         out += '<td><div><img src=\"%s\" width=200 height=200 border=1 alt=\"img\" /><br><a href=\"%s\"target=\"_blank\">%.3f</a></div></td>' \
                 % (img_url, img_url, prob)
@@ -44,7 +46,7 @@ def visulize_cslist(cs_list, filename, decend=1):
     """
     output = open(filename, 'w')
 #改动-temp
-    each_row, max_col =8, 100
+    each_row, max_col =4, 100
     items, col_idx = [], 0
     # print(cs_list[0])
     if not (isinstance(cs_list[0], list) or isinstance(cs_list[0], tuple)):
@@ -102,7 +104,7 @@ def visualize_folder(imgdir, filename):
     lst = glob.glob(osp.join(imgdir, '*.jpg'))
     cslist = [(p, 1) for p in lst]
     visulize_cslist(cslist, filename)
-    url = get_url_ubuntu(filename)
+    url = get_url(filename)
     print("[path of html] >> %s" %url)
     return url
 
