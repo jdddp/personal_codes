@@ -23,7 +23,7 @@ def initialize_model(model_name, num_classes, feature_learn=True, use_pretrained
         '''need torchvison>=1.2
         2022.1-beyond swin-transformer
         kernel_size->7;bn->ln;gelu->relu
-        convnext_tiny convnext_small convnext_base convnext_large
+        convnext_tiny224 convnext_small224 convnext_base384 convnext_large384
 
         '''
         model_ft = models.convnext_tiny(pretrained=use_pretrained)

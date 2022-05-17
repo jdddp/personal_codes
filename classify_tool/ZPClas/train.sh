@@ -1,2 +1,2 @@
-python main.py -m convnext -p E:\vsCodes\gitgit\personal_codes\classify_tool\projects\dogClasV1 -b 128 -n 10 -i E:\vsCodes\gitgit\personal_codes\classify_tool\projects\dogClasV1\dogV1 -t train
+python main.py -m resnet18 -p E:\vsCodes\gitgit\personal_codes\classify_tool\projects\dogClasV1 -b 128 -n 10 -i E:\vsCodes\gitgit\personal_codes\classify_tool\projects\dogClasV1\dogV1 -t train -ws balance
 shufflenet_v2_x0_5

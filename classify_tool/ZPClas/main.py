@@ -21,7 +21,7 @@ def main(config):
 
     feature_learning = (config.mode=='train')
     if config.mode =='train':
-        dataloaderDct, datasetSizesDct=MyDataLoader(config.datasetPath, config.projectPath, config.batch_size)
+        dataloaderDct, datasetSizesDct=MyDataLoader(config.datasetPath, config.projectPath, config.weight_sample,config.batch_size)
         model_ft, input_size = initialize_model(config.model_name, config.num_classes, feature_learning, use_pretrained=True)
 
         model_ft = model_ft.to(device)
@@ -31,6 +31,7 @@ def main(config):
         optimizer_ft=optim.SGD(model_ft.parameters(), lr=0.001, momentum=0.9)
         exp_lr_scheduler = optim.lr_scheduler.StepLR(optimizer_ft, step_size=10, gamma=0.1)
         best_train_acc,best_val_acc = train_model(config.datasetPath,config.projectPath,config.batch_size,dataloaderDct,datasetSizesDct,model_ft, criterion, optimizer_ft, exp_lr_scheduler,config.model_name, 10,1,1)
+        return best_train_acc,best_val_acc
     else:
         img_list=get_img_list(config.datasetPath)
         dataloader=InferDataLoader(img_list, config.batch_size)
@@ -66,6 +67,8 @@ if __name__ == "__main__":
     parser.add_argument("-n","--num_classes", required=True, type=int, help="train or test")
     parser.add_argument("-i","--datasetPath", type=str, help="path of dataset")
     parser.add_argument("-t","--mode", type=str, required=True, help="path of dataset")
+    parser.add_argument("-ws","--weight_sample", type=str, default='', help="path of dataset")
+
 
     parser.add_argument("-w","--pretrained_weight", type=str, help="path of weight")
     parser.add_argument("-a","--ans_nums", type=int,default=3, help="path of weight")
