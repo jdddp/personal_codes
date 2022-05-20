@@ -9,7 +9,7 @@ import json
 def get_url(abs_imgpath,port_num=8225):
     if not osp.isfile(abs_imgpath):
         print('{} is not a imgpath'.format(abs_imgpath))
-    personal_url='http://10.6.174.80:%d'%port_num+'\\'
+    personal_url='http://127.0.0.1:%d'%port_num+'\\'
     if abs_imgpath.startswith('E:\\vsCodes\\'):
         return abs_imgpath.replace('E:\\vsCodes\\', personal_url)
     elif abs_imgpath.startswith('/home/linke/codes/'):  #127.0.0.1
@@ -46,7 +46,7 @@ def visulize_cslist(cs_list, filename, decend=1):
     """
     output = open(filename, 'w')
 #改动-temp
-    each_row, max_col =4, 100
+    each_row, max_col =8, 100
     items, col_idx = [], 0
     # print(cs_list[0])
     if not (isinstance(cs_list[0], list) or isinstance(cs_list[0], tuple)):
