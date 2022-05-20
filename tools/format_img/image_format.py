@@ -28,7 +28,7 @@ def formatDir(dirpath, outdir, format='dir', \
     short_size=0, reserve_name=0):
     imglist=get_imagelist(dirpath,format)
     print('get images %d'% len(imglist))
-    makeDir(outdir)
+    os.makedirs(outdir, exist_ok=True)
     short_size, reserve_name=int(short_size), int(reserve_name)
     if reserve_name==0:
         info_tp=[(p, short_size, osp.join(outdir,osp.basename(p).split('.')[0]+'.jpg')) \
@@ -46,6 +46,7 @@ def format(imgpath, outdir):
     short_size=0
     info_tp=(imgpath, short_size, osp.join(outdir, str(uuid.uuid1())+'.jpg'))
     preprocess(info_tp)
+
 
 if __name__ == '__main__':
     if len(sys.argv) > 1 :

@@ -5,12 +5,22 @@ import pdb
 import glob
 import json
 
+#http://10.6.174.80:8225/localCodes/dataset/lh_test_split/visual_img_test/11-imgE.jpg
 def get_url(abs_imgpath,port_num=8225):
     if not osp.isfile(abs_imgpath):
         print('{} is not a imgpath'.format(abs_imgpath))
-    personal_url='http://10.6.174.80:%d'%port_num+'\\'
+    personal_url='http://127.0.0.1:%d'%port_num+'\\'
     if abs_imgpath.startswith('E:\\vsCodes\\'):
         return abs_imgpath.replace('E:\\vsCodes\\', personal_url)
+    elif abs_imgpath.startswith('/home/linke/codes/'):  #127.0.0.1
+        return abs_imgpath.replace('/home/linke/codes/', personal_url)
+
+# def get_url_ubuntu(abs_imgpath,port_num=8225):
+#     if not osp.isfile(abs_imgpath):
+#         print('{} is not a imgpath'.format(abs_imgpath))
+#     personal_url='http://127.0.0.1:%d'%port_num+'/'
+#     if abs_imgpath.startswith('/home/linke/codes/'):
+#         return abs_imgpath.replace('/home/linke/codes/', personal_url)
 
 def refrom_res(lst):
     """format table of imagelist
@@ -38,14 +48,15 @@ def visulize_cslist(cs_list, filename, decend=1):
 #改动-temp
     each_row, max_col =8, 100
     items, col_idx = [], 0
+    # print(cs_list[0])
     if not (isinstance(cs_list[0], list) or isinstance(cs_list[0], tuple)):
         cs_list = [(cs, 1) for cs in cs_list]
 
 
 #改动temp
-    # cs_list = sorted(cs_list, key=lambda tup:tup[1], reverse=True) if decend == 1 else \
-    #             sorted(cs_list, key=lambda tup:tup[1])
-    cs_list = sorted(cs_list, key=lambda tup:int(osp.basename(tup[0]).split('-')[0]))
+    cs_list = sorted(cs_list, key=lambda tup:tup[1], reverse=True) if decend == 1 else \
+                sorted(cs_list, key=lambda tup:tup[1])
+    # cs_list = sorted(cs_list, key=lambda tup:int(osp.basename(tup[0]).split('-')[0]))
          
     for i, (cs, prob) in enumerate(cs_list):
         if len(items) < each_row:
@@ -94,7 +105,7 @@ def visualize_folder(imgdir, filename):
     cslist = [(p, 1) for p in lst]
     visulize_cslist(cslist, filename)
     url = get_url(filename)
-    print("[path of html] >> %s" % ( url))
+    print("[path of html] >> %s" %url)
     return url
 
 def visualize_folders(imgdir, htmlDir):
