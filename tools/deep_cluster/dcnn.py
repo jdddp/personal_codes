@@ -30,13 +30,14 @@ def fuse_model(model):
 
 
 #C:\Users\jdddp/.cache\torch\hub\checkpoints\resnet101-5d3b4d8f.pth
+#/home/linke/.cache/torch/hub/checkpoints/resnet101-5d3b4d8f.pth
 def feature_exactor():
     deepCNN = models.resnet101(pretrained=True)
     deepCNN.fc=nn.Sequential()
     fuse_model(deepCNN)
     return deepCNN
 
-def get_feature(img_dir, txt_path, npy_path,ifCuda=False):
+def get_feature(img_dir, txt_path, npy_path,ifCuda=True):
     device = torch.device('cuda:0')
 
     txtFile=open(txt_path, 'a', encoding='utf-8')
