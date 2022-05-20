@@ -8,7 +8,7 @@ import uuid
 import numpy as np
 import math
 import multiprocessing
-from common_use import get_imagelist, makeDir
+from common_use import get_imagelist
 
 def preprocess(info_tp):
     imgpath, short_size, dstpath=info_tp
