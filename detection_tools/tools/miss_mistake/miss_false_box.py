@@ -65,6 +65,22 @@ def find_mistake_box(gt_path,pred_path,ansJson,threshold=0.5):
         else:
             ansDct[imgname]=__find_mistake(dct_lst, pred_res[imgname], threshold)
     
+    #分开算把;适用于单类别det;浪费些时间可与上合并
+    gt=0
+    pred=0
+    tp=0
+    incorrect_nums=0
+    gt += len(dct_lst) for _,dct_lst in gt_res.items()
+    pred += len(dct_lst) for _,dct_lst in pred_res.items()
+    for _,sgDct in ansDct.items():
+        incorrect_nums+=len(sgDct['mistake'])
+    tp=pred-incorrect_nums
+    print('*'*20)
+    print('precison is {:4f}'.format(tp*1.0/gt))
+    print('recall is {:4f}'.format(tp*1.0/pred))
+    print('*'*20)
+    
+
     with open(ansJson,'w',encoding='utf-8')as f:
         f.write(json.dumps(ansDct))
 
