@@ -32,9 +32,9 @@ def decon_coco(cocoJson):
         if(int(item['id']) in ann_list):
             final_decon[item['file_name']] = ann_list[int(item['id'])]
         else:
-            # final_decon[item['file_name']] = []
-            pass
-
+            final_decon[item['file_name']] = []
+            # pass
+    # print(final_decon)
     return final_decon
 
 #批量cocoORusual 2 usual
@@ -47,14 +47,14 @@ def coco2u(cocoJson_path, usualJson_path):
         goalJson={}
         for ann in os.listdir(cocoJson_path):
             cocoJson=json.loads(open(osp.join(cocoJson_path,ann)).read())
-            if 'image' in cocoJson and 'categories' in cocoJson and 'annotations' in cocoJson:
+            if 'images' in cocoJson and 'categories' in cocoJson and 'annotations' in cocoJson:
                 goalJson.update(decon_coco(cocoJson))
             else:
                 goalJson.update(cocoJson)
     else:
         goalJson=decon_coco(json.loads(open(cocoJson_path).read()))
     with open(osp.join(usualJson_path, 'usual.json'),'w', encoding='utf-8')as f:
-        json.dump(goalJson, f)
+        f.write(json.dumps(goalJson))
     return goalJson
 
 def sg_usual2coco(usualJson_path,goal_coco_dataset, ratio=0.9):
@@ -122,7 +122,7 @@ def sg_usual2coco(usualJson_path,goal_coco_dataset, ratio=0.9):
             image_id += 1
     with open(osp.join(coco_dir,'train.json'),'w',encoding='utf-8')as f:
         f.write(json.dumps(train_coco))
-    print('train.json is done,img_nums is {}'.format(math.ceil(len(list(res.items()))*ratio)))
+    print('train.json is done,img_nums is {}'.format(math.floor(len(list(res.items()))*ratio)))
 
     image_id = 0
     bbox_id = 0
