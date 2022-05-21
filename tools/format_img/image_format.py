@@ -8,7 +8,7 @@ import uuid
 import numpy as np
 import math
 import multiprocessing
-from common_use import get_imagelist, makeDir
+from common_use import get_imagelist
 
 def preprocess(info_tp):
     imgpath, short_size, dstpath=info_tp
@@ -25,12 +25,12 @@ def preprocess(info_tp):
     cv2.imwrite(dstpath, img)
 
 def formatDir(dirpath, outdir, format='dir', \
-    short_size=0, reserve_name=0):
+    reserve_name=1, short_size=0):
     imglist=get_imagelist(dirpath,format)
     print('get images %d'% len(imglist))
     os.makedirs(outdir, exist_ok=True)
     short_size, reserve_name=int(short_size), int(reserve_name)
-    if reserve_name==0:
+    if reserve_name==1:
         info_tp=[(p, short_size, osp.join(outdir,osp.basename(p).split('.')[0]+'.jpg')) \
             for p in imglist]
     else:

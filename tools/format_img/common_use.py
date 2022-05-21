@@ -31,6 +31,8 @@ def get_imagelist(imagepath, format):
         imglist = get_imagelist_from_txt(imagepath)
     elif format == 'folders':
         imglist = get_imagelist_from_folders(imagepath)
+    
+    return imglist
 
 def calculate_folders(dirpath):
     for dirname in os.listdir(dirpath):
