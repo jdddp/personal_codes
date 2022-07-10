@@ -8,6 +8,7 @@ import uuid
 import numpy as np
 import math
 import multiprocessing
+import shutil
 from common_use import get_imagelist
 
 def preprocess(info_tp):
@@ -40,6 +41,24 @@ def formatDir(dirpath, outdir, format='dir', \
     pool=multiprocessing.Pool(8)
     for _ in tqdm(pool.imap_unordered(preprocess, info_tp)):
         pass
+
+def format_dir_db(img_dir, anno_dir, out_dir, type_anno='xml'):
+    '''tmp for xml
+    '''
+    assert type_anno in ['xml', 'json', 'txt'], 'type of anno_file error!'
+    img_dir_n=osp.join(out_dir, 'imgs')
+    anno_dir_n=osp.join(out_dir, 'xmls')
+    os.makedirs(img_dir_n, exist_ok=True)
+    os.makedirs(anno_dir_n, exist_ok=True)
+
+
+    for img_name in tqdm(os.listdir(img_dir)):
+        tmp_name=str(uuid.uuid1())
+        shutil.copy(osp.join(img_dir, img_name), osp.join(img_dir_n, tmp_name+'.'+img_name.split('.')[1]))
+        shutil.copy(osp.join(anno_dir, img_name.split('.')[0]+'.'+type_anno), osp.join(anno_dir_n, tmp_name+'.'+type_anno))
+
+
+
 
 #test
 def format(imgpath, outdir):
