@@ -34,7 +34,7 @@ def draw_imgs(dirpath):
     '''
     imgDir=osp.join(dirpath, 'imgs')
     jsonPath=osp.join(dirpath, 'usual.json')
-    ansDir=osp.join(dirpath, 'visual_img')
+    ansDir=osp.join(dirpath, 'visual_img_v1')
     os.makedirs(ansDir,exist_ok=True)
 
     if osp.isfile(jsonPath):
@@ -55,8 +55,9 @@ def draw_imgs(dirpath):
                         score=sgDct['score']
                         draw.text((bbox[0], bbox[1]), '{}_{:.2}'.format(label,score),fill=color, font=ImageFont.truetype("/usr/share/fonts/truetype/pagul/Pagul.ttf", 20))
                     else:
-                        draw.text((bbox[0], bbox[1]), label,fill=color, font=ImageFont.truetype('/usr/share/fonts/truetype/pagul/Pagul.ttf',14))
+                        draw.text((bbox[0], bbox[1]), label,fill=color, font=ImageFont.truetype('C:/Windows/Fonts/msyh.ttc',18))
                     #C:/Windows/Fonts/msyh.ttc
+                    #/usr/share/fonts/truetype/pagul/Pagul.ttf
             source_img=source_img.convert('RGB')
             # try:
             source_img.save(osp.join(ansDir, imgname))

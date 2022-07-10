@@ -31,7 +31,7 @@ def refrom_res(lst):
     for i, (cs, prob) in enumerate(lst):
         img_url = get_url(cs)
 #改动-temp
-        out += '<td><div><img src=\"%s\" width=200 height=200 border=1 alt=\"img\" /><br><a href=\"%s\"target=\"_blank\">%.3f</a></div></td>' \
+        out += '<td><div><img src=\"%s\" width=400 height=300 border=1 alt=\"img\" /><br><a href=\"%s\"target=\"_blank\">%.3f</a></div></td>' \
                 % (img_url, img_url, prob)
     return out
 
@@ -46,7 +46,7 @@ def visulize_cslist(cs_list, filename, decend=1):
     """
     output = open(filename, 'w')
 #改动-temp
-    each_row, max_col =8, 100
+    each_row, max_col =3, 100
     items, col_idx = [], 0
     # print(cs_list[0])
     if not (isinstance(cs_list[0], list) or isinstance(cs_list[0], tuple)):
