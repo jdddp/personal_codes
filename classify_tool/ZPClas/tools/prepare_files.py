@@ -40,7 +40,7 @@ def makeMapFile(dirpath, projectPath):
     '''dirpath: path of dataset
     filePath: path of [id<->label]
     '''
-    filePath=osp.join(projectPath, 'files')
+    filePath=osp.join(projectPath, 'files'+'_'+osp.basename(dirpath))
     makeDir(filePath)
     label2id={}
     id2label={}
@@ -63,26 +63,27 @@ def makeTrainFiles(dirpath, projectPath,ratio=0.9):
     '''dirpath: path of dataset
     filePath: path of [id<->label]
     '''
-    filePath=osp.join(projectPath, 'files')
+    filePath=osp.join(projectPath, 'files'+'_'+osp.basename(dirpath))
     makeDir(filePath)
     
     ratio=float(ratio)
     label2id=json.loads(open(osp.join(filePath, 'label2id.json')).read())
     train_list=[]
     val_list=[]
+
     for label in tqdm(label2id):
         temp_list=[]
         label_id=label2id[label]
         for imgname in os.listdir(osp.join(dirpath,label)):
             if cv2.imread(osp.join(dirpath,label,imgname)) is not None:
                 temp_list.append(label+'/'+imgname+'\t'+label_id)
-                random.shuffle(temp_list)
-                
-                train_list.extend(temp_list[0:math.floor(len(temp_list)*ratio)])
-                val_list.extend(temp_list[math.floor(len(temp_list)*ratio):])
             else:
                 print(osp.join(dirpath,label,imgname))
-    
+
+        random.shuffle(temp_list)
+        train_list.extend(temp_list[0:math.floor(len(temp_list)*ratio)])
+        val_list.extend(temp_list[math.floor(len(temp_list)*ratio):])
+
     random.shuffle(train_list)
     random.shuffle(train_list)
     random.shuffle(val_list)
