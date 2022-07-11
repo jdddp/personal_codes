@@ -1,4 +1,5 @@
 '''based on mmdetection
+>>>>>just for single-clas until 2022-7-11<<<<<<<<
 For other model, just need to change get_model and line 114-138; just make sure pred of model in format of usualJson
 '''
 import os,sys
@@ -65,17 +66,20 @@ def deduplicate_bboxes(dct_lst):
     for i in range(len(dct_lst)):
         if i in set(useless_lst):
             continue
-        flag=0
-        temp_lst=[]
+        #记录是否要做nms融合
+        # flag=0
+        # temp_lst=[]
         for j in range(i+1,len(dct_lst)):
+            if j in useless_lst:
+                continue
             if _iou(dct_lst[i]['bbox'], dct_lst[j]['bbox']):
-                flag=1
-                temp_lst.append(dct_lst[j])
+                # flag=1
+                # temp_lst.append(dct_lst[j])
+                # useless_lst.append(j)
+                #修改为，始终维护当前这个i对应的dct，那每次只要有iou就合起来替换i就完了
+                dct_lst[i]=__deduplicate([dct_lst[i], dct_lst[j]])
                 useless_lst.append(j)
-        if flag==0:
-            ansLst.append(dct_lst[i])
-        else:
-            ansLst.append(__deduplicate(temp_lst))
+        ansLst.append(dct_lst[i])
     return ansLst
 
 
