@@ -1,9 +1,12 @@
 '''based on mmdetection
->>>>>just for single-clas until 2022-7-11<<<<<<<<
+>>>>>just for single-clas until 2022-6-1<<<<<<<<
+>>>>>For multi-clas in 2022-7-14, without test <<<<<<<<
 For other model, just need to change get_model and line 114-138; just make sure pred of model in format of usualJson
 '''
 import os,sys
 import os.path as osp
+
+from torch import classes
 sys.path.append('/home/linke/codes/localCodes/mmdetection')
 from mmdet.apis import init_detector, inference_detector
 import mmcv
@@ -16,7 +19,9 @@ import math
 import time
 
 def getClasses():
-    class_names=('fluid_inclusions',)
+    # class_names=('fluid_inclusions',)
+    class_names=('unknown', 'v_m', 'l_v_m')
+
     return class_names
 
 def get_model(config_file, weight, device):
@@ -82,7 +87,21 @@ def deduplicate_bboxes(dct_lst):
         ansLst.append(dct_lst[i])
     return ansLst
 
-
+def deduplicate_bboxes_multiclass(dct_lst):
+    ans_lst=[]
+    classes_names=getClasses()
+    dct_in_cls={}
+    for i, cls_name in enumerate(classes_names):
+        dct_in_cls[cls_name]=[]
+    for dct in dct_lst:
+        dct_in_cls[dct_lst['category']].append(dct)
+    
+    #print(dct_in_cls)
+    for _,sub_dct_lst in dct_in_cls.items():
+        sub_ans_lst=deduplicate_bboxes(sub_dct_lst)
+        ans_lst.append(sub_ans_lst)
+    
+    return ans_lst
 
 def infer_sg(img_path, model, scale=640, thre=0.5):
     class_names=getClasses()
@@ -140,8 +159,11 @@ def infer_sg(img_path, model, scale=640, thre=0.5):
                     }
                 )
             #
-    #dct_lst need deduplication
-    dct_lst=deduplicate_bboxes(dct_lst)
+    #dct_lst need deduplication;if multi_class
+    if len(class_names)==1:
+        dct_lst=deduplicate_bboxes(dct_lst)
+    else:
+        dct_lst=deduplicate_bboxes_multiclass(dct_lst)
     return dct_lst
 
 def inferSlide(config_file, checkpoint_file,imgDir, predJsonPath,thre=0.5,scale=640,device='cuda:0'):
