@@ -8,7 +8,7 @@ import json
 import collections
 import pandas as pd
 
-def if_iou(list1,list2, threshold=0.3):
+def if_iou(list1,list2, threshold=0.5):
     w1,h1=list1[2:]
     w2,h2=list2[2:]
     xl=max(list1[0],list2[0])
@@ -73,7 +73,7 @@ def get_args_for_pr(dct_gt, dct_pred):
 
         #
         useless_idx=set()
-
+        #遍历gt
         for sub_dct_gt in dct_lst_gt:
             #标识符，没找到的话，这个属于漏召了
             flag=1
@@ -84,6 +84,7 @@ def get_args_for_pr(dct_gt, dct_pred):
 
             # for sub_dct_pred in dct_lst_pred:
                 if if_iou(sub_dct_gt['bbox'], sub_dct_pred['bbox']):
+                    # if sub_dct_gt['category']==sub_dct_pred['category']:
                     flag=0
                     useless_idx.add(i)
                     # dct_lst_pred.remove(sub_dct_pred)
@@ -91,14 +92,14 @@ def get_args_for_pr(dct_gt, dct_pred):
                         pred_ans[sub_dct_gt['category']][sub_dct_pred['category']]+=1
                     else:
                         pred_ans[sub_dct_gt['category']][sub_dct_pred['category']]=1
-                    continue
-            
-            if flag:
+                    break
+        
+            if flag==1:
                 if 'missing' in pred_ans[sub_dct_gt['category']]:
                     pred_ans[sub_dct_gt['category']]['missing']+=1
                 else:
                     pred_ans[sub_dct_gt['category']]['missing']=1
-    # print(num_to_cal, pred_ans)
+    print(pred_ans)
     return (num_to_cal, pred_ans)
 
 
